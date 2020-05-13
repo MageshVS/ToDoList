@@ -1,0 +1,291 @@
+package com.example.todolist;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
+import android.app.AlarmManager;
+import android.app.DatePickerDialog;
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
+import android.widget.ToggleButton;
+
+import java.text.DateFormat;
+import java.util.Calendar;
+
+public class AddNotes extends AppCompatActivity implements AlertDialogActivity.AlertDialogInterface {
+
+    private String format;
+    public String label;
+    public Button btncls;
+
+    private  int hour_for_alarm ,minute_for_alarm, day_for_alarm, month_for_alarm, year_for_alarm;
+
+    private Spinner labelSpinner, dateSpinner, timeSpinner;
+    private ToggleButton remainderToggle;
+    private EditText notesView;
+
+    private NotificationManagerCompat notificationManager;
+
+    private TextView dateView, timeView;
+    DatePickerDialog.OnDateSetListener setListener;
+    TimePickerDialog.OnTimeSetListener timeSetListener;
+
+    public Databasehelper databasehelper;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_notes);
+
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary, null));
+        toolbar.setTitleTextAppearance(this, R.style.righteous_regular);
+        setSupportActionBar(toolbar);
+
+        databasehelper = new Databasehelper(this);
+        labelSpinner = (Spinner) findViewById(R.id.labelSpinner);
+
+        notificationManager = NotificationManagerCompat.from(this);
+
+        ArrayAdapter<String> labelAdapter = new ArrayAdapter<>(AddNotes.this,
+                android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.labelArray));
+        labelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        labelSpinner.setAdapter(labelAdapter);
+
+
+        labelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i<4) {
+                     Toast.makeText(getApplicationContext(), (String)adapterView.getItemAtPosition(i), Toast.LENGTH_SHORT).show();
+                     label = (String) adapterView.getItemAtPosition(i);
+                }
+                else if(i == 4){
+                    openDialog();
+                }
+                else{
+                    label = "No Label";
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                label = "Work";
+            }
+        });
+
+        dateView = (TextView) findViewById(R.id.dateView);
+        timeView = (TextView) findViewById(R.id.TimeView);
+        notesView = (EditText)findViewById(R.id.notesConatiner);
+
+
+        Calendar calendar = Calendar.getInstance();
+        final int year = calendar.get(Calendar.YEAR);
+        final int month = calendar.get(Calendar.MONTH);
+        final int date = calendar.get(Calendar.DAY_OF_MONTH);
+
+        year_for_alarm = year;
+        month_for_alarm = month;
+        day_for_alarm = date;
+
+        String currentDate = DateFormat.getDateInstance(DateFormat.MEDIUM).format(calendar.getTime());
+        dateView.setText(currentDate);
+
+        dateView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(AddNotes.this,
+                        R.style.DatePickerDialogTheme,
+                        setListener, year, month, date);
+
+                datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+                datePickerDialog.show();
+            }
+        });
+
+        setListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int date) {
+                month = month + 1;
+                year_for_alarm = year;
+                month_for_alarm = month;
+                day_for_alarm = date;
+                String mon;
+                mon = "Jan";
+                switch (month){
+                    case 1:
+                        mon = "Jan";
+                        break;
+                    case 2:
+                        mon = "Feb";
+                        break;
+                    case 3:
+                        mon = "Mar";
+                        break;
+                    case 4:
+                        mon = "Apr";
+                        break;
+                    case 5:
+                        mon = "May";
+                        break;
+                    case 6:
+                        mon = "June";
+                        break;
+                    case 7:
+                        mon = "July";
+                        break;
+                    case 8:
+                        mon = "Aug";
+                        break;
+                    case 9:
+                        mon = "Sep";
+                        break;
+                    case 10:
+                        mon = "Oct";
+                        break;
+                    case 11:
+                        mon = "Nov";
+                        break;
+                    case 12:
+                        mon = "Dec";
+                        break;
+                }
+                String day = mon+" "+date+" "+year;
+                dateView.setText(day);
+
+            }
+         };
+
+        timeView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar cal = Calendar.getInstance();
+                final int hour = cal.get(Calendar.HOUR_OF_DAY);
+                final int minute = cal.get(Calendar.MINUTE);
+
+                TimePickerDialog dialog = new TimePickerDialog(AddNotes.this,
+                        R.style.DatePickerDialogTheme, timeSetListener, hour, minute, false);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+                dialog.show();
+
+            }
+        });
+        timeSetListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                hour_for_alarm = hour;
+                minute_for_alarm = minute;
+                if (hour == 0) {
+
+                    hour += 12;
+                    format = "AM";
+                } else if (hour == 12) {
+                    format = "PM";
+                } else if (hour > 12) {
+                    hour -= 12;
+                    format = "PM";
+                } else {
+                    format = "AM";
+                }
+                if(minute<10){
+                    String time = hour + " : " + "0"+minute + " " + format;
+                    timeView.setText(time);
+                }
+                else{
+                    String time = hour + " : " + minute + " " + format;
+                    timeView.setText(time);
+                }
+
+            }
+        };
+       btncls = (Button)findViewById(R.id.buttoncls);
+       btncls.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               addDataToDatabsse();
+               sendOnChannel1();
+           }
+       });
+    }
+
+    public void sendOnChannel1(){
+        Intent ActivityIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, ActivityIntent, 0);
+
+        Intent BroadcastIntent = new Intent(this, NotificationRecivier.class);
+        BroadcastIntent.putExtra("Toast Message", "Edit Message");
+        PendingIntent ActionIntent = PendingIntent.getBroadcast(this, 0, BroadcastIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+        Notification notification = new NotificationCompat.Builder(this, NotificationChannelClass.CHANNEL_1_ID)
+                .setSmallIcon(R.drawable.poll)
+                .setContentTitle("Remainder")
+                .setContentText("Get Back To Work")
+                .setContentIntent(pendingIntent)
+                .addAction(R.mipmap.ic_launcher, "Toast", ActionIntent)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
+                .setColor(getResources().getColor(R.color.colorPrimary))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_REMINDER).build();
+
+        notificationManager.notify(1, notification);
+
+    }
+    public void setAlarm(View v){
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlarmReciver.class);
+        PendingIntent pendingIntentAlarm = PendingIntent.getBroadcast(getApplicationContext(),1, intent, 0);
+
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(System.currentTimeMillis());
+        c.clear();
+        c.set(Calendar.DAY_OF_MONTH, day_for_alarm);
+        c.set(Calendar.MONTH, month_for_alarm);
+        c.set(Calendar.YEAR, year_for_alarm);
+        c.set(Calendar.HOUR_OF_DAY, hour_for_alarm);
+        c.set(Calendar.MINUTE, minute_for_alarm);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntentAlarm);
+    }
+    public void addDataToDatabsse(){
+        boolean isInserted = databasehelper.insertData(label, dateView.getText().toString(),
+                timeView.getText().toString(), notesView.getText().toString());
+        if(isInserted){
+            Toast.makeText(getApplicationContext(), "Inserted Successfully", Toast.LENGTH_LONG).show();
+        }
+        else{
+            Toast.makeText(getApplicationContext(), "Insertion Failed", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+
+    public void openDialog(){
+        AlertDialogActivity alertDialog_helper = new AlertDialogActivity();
+        alertDialog_helper.show(getSupportFragmentManager(), "Dialog");
+    }
+
+    @Override
+    public void applyTexts(String alert_label) {
+            label = alert_label;
+            Toast.makeText(getApplicationContext(),label, Toast.LENGTH_SHORT).show();
+    }
+}

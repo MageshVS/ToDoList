@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">To-Do List</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string-array name="labelArray">
+        <item>Select a Label</item>
+        <item>Work</item>
+        <item>Event</item>
+        <item>Shopping</item>
+        <item>Custom</item>
+    </string-array>
+
+    <string-array name="dateArray">
+        <item>Today</item>
+        <item>Tomorrow</item>
+        <item>Day After Tomorrow</item>
+        <item>Custom</item>
+    </string-array>
+
+    <string-array name="timeArray">
+        <item>Morning</item>
+        <item>Afternoon</item>
+        <item>Evening</item>
+        <item>Custom</item>
+    </string-array>
+</resources>
