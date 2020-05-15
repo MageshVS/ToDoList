@@ -21,6 +21,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class UpdateActivity extends AppCompatActivity implements AlertDialogActivity.AlertDialogInterface{
@@ -28,10 +29,12 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
     Spinner spinner;
     TextView dateUpdateView, timeUpdateView, labelUpdateView;
     EditText notesUpdateView;
-    Button update;
+    Button update, deleteOneRow;
     String label, format;
+    ArrayList<String> labelArray;
     private  int hour_for_alarm ,minute_for_alarm, day_for_alarm, month_for_alarm, year_for_alarm;
     String update_id, update_label, update_date, update_time, update_notes;
+    String a_update_label;
     DatePickerDialog.OnDateSetListener setListener;
     TimePickerDialog.OnTimeSetListener timeSetListener;
     private Databasehelper databasehelper;
@@ -53,9 +56,24 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
         notesUpdateView = (EditText) findViewById(R.id.update_notesConatiner);
         update = (Button) findViewById(R.id.update_buttoncls);
 
-        ArrayAdapter<String> labelAdapter = new ArrayAdapter<>(UpdateActivity.this,
-                android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.labelArray));
+        labelArray = new ArrayList<String>();
+        labelArray.add("Select a Label");
+        labelArray.add("Work");
+        labelArray.add("Event");
+        labelArray.add("Shopping");
+        labelArray.add("Custom");
+        getAndSetIntentData();
+
+        final ArrayAdapter<String> labelAdapter = new ArrayAdapter<>(UpdateActivity.this,
+                android.R.layout.simple_list_item_1,labelArray);
         labelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        final int a = labelAdapter.getPosition(a_update_label);
+        spinner.post(new Runnable() {
+            @Override
+            public void run() {
+                spinner.setSelection(a);
+            }
+        });
         spinner.setAdapter(labelAdapter);
 
 
@@ -196,7 +214,7 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
             }
         };
 
-        getAndSetIntentData();
+
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -209,6 +227,15 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
                 startActivity(updateIntent);
             }
         });
+        deleteOneRow = (Button)findViewById(R.id.recyclerDeletebtn);
+        deleteOneRow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Databasehelper databasehelper = new Databasehelper(UpdateActivity.this);
+                databasehelper.deleteOneRow(update_id);
+                finish();
+            }
+        });
     }
 
     public void getAndSetIntentData() {
@@ -216,7 +243,8 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
                 && getIntent().hasExtra("DATE") && getIntent().hasExtra("TIME") && getIntent().hasExtra("NOTES")) {
 
             update_id = getIntent().getStringExtra("ID");
-            update_label = getIntent().getStringExtra("LABEL");
+            a_update_label = getIntent().getStringExtra("LABEL");
+            Toast.makeText(getApplicationContext(), "a_update"+a_update_label,Toast.LENGTH_LONG).show();
             update_date = getIntent().getStringExtra("DATE");
             update_time = getIntent().getStringExtra("TIME");
             update_notes = getIntent().getStringExtra("NOTES");

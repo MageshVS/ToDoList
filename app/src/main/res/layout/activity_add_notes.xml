@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddNotes">
+    tools:context=".AddNotesActivity">
 
     <include layout="@layout/toolbar_include"/>
 
@@ -151,6 +151,7 @@
             android:textSize="20dp"/>
 
         <ToggleButton
+            android:id="@+id/toggleButton"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginTop="20dp"
@@ -159,8 +160,6 @@
             android:layout_alignParentEnd="true"
             android:textOn=""
             android:textOff=""
-            android:onClick="setAlarm"
-            android:checked="true"
             android:gravity="center" />
 
     </RelativeLayout>

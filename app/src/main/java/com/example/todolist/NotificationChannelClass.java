@@ -21,7 +21,7 @@ public class NotificationChannelClass extends Application {
             );
             notificationChannel.enableLights(true);
             notificationChannel.enableVibration(true);
-            notificationChannel.setDescription("Alarm Mssage");
+            notificationChannel.setDescription("Alarm Message");
 
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(notificationChannel);

@@ -1,19 +1,17 @@
 package com.example.todolist;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.LauncherActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,8 +27,9 @@ public class MainActivity extends AppCompatActivity {
     public ArrayList<String> array_id,array_label,array_date,array_time,array_notes;
 
     public ListView listView;
-    private TextView textView;
+    private TextView textView, emptyTextView;
     private Button button;
+    private ImageView emptyImageView;
     private RecyclerView recyclerView;
     public FloatingActionButton floatingActionButton;
 
@@ -54,14 +53,14 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         databasehelper = new Databasehelper(this);
-        textView = (TextView) findViewById(R.id.addNotes);
-        listView = (ListView)findViewById(R.id.listView);
+        emptyImageView = (ImageView)findViewById(R.id.emptyImageView);
+        emptyTextView = (TextView)findViewById(R.id.emptytextView);
 
         floatingActionButton = (FloatingActionButton)findViewById(R.id.floatbtn);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent floatIntent = new Intent(MainActivity.this,AddNotes.class);
+                Intent floatIntent = new Intent(MainActivity.this, AddNotesActivity.class);
                 startActivity(floatIntent);
             }
         });
@@ -80,15 +79,14 @@ public class MainActivity extends AppCompatActivity {
                 array_id, array_label, array_date, array_time, array_notes);
         recyclerView.setAdapter(dataAdapterClass);
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-
-
-        deleteData();
     }
 
     public void viewData() {
         Cursor cursor = databasehelper.viewAllData();
 
         if (cursor.getCount() == 0) {
+            emptyImageView.setVisibility(View.VISIBLE);
+            emptyTextView.setVisibility(View.VISIBLE);
             Toast.makeText(getApplicationContext(), "Empty", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(getApplicationContext(), " not Empty", Toast.LENGTH_LONG).show();
@@ -98,25 +96,8 @@ public class MainActivity extends AppCompatActivity {
                 array_date.add(cursor.getString(2));
                 array_time.add(cursor.getString(3));
                 array_notes.add(cursor.getString(4));
-
             }
-
         }
-    }
-    public  void deleteData(){
-        button = (Button)findViewById(R.id.deletebtn);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Integer deleteRows = databasehelper.deleteData("May 12, 2020");
-                if(deleteRows != 0){
-                    Toast.makeText(getApplicationContext(), "Data deleted", Toast.LENGTH_LONG).show();
-                }
-                else{
-                    Toast.makeText(getApplicationContext(), "Data Not Deleted", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
     }
 
 }

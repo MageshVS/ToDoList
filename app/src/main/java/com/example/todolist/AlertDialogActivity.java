@@ -21,7 +21,7 @@ public class AlertDialogActivity extends AppCompatDialogFragment {
         androidx.appcompat.app.AlertDialog.Builder builder = new  androidx.appcompat.app.AlertDialog.Builder(getActivity());
         LayoutInflater layoutInflater = getActivity().getLayoutInflater();
         View view = layoutInflater.inflate(R.layout.alertdialog_label, null);
-        builder.setView(view).setTitle("Custom Label").setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setView(view).setTitle("Add a Custom Label").setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 

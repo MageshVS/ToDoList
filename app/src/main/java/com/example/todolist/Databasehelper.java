@@ -75,8 +75,15 @@ public class Databasehelper extends SQLiteOpenHelper {
             Toast.makeText(context, "Update Success ", Toast.LENGTH_LONG).show();
         }
     }
-    public  Integer deleteData(String date){
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        return sqLiteDatabase.delete(TABLE_NAME, "DATE = ?", new String[] {date});
+
+    public void deleteOneRow(String id){
+        SQLiteDatabase database = getWritableDatabase();
+        long result = database.delete(TABLE_NAME,"id=?", new String[]{id});
+        if(result == -1){
+            Toast.makeText(context, "Deletion Failed", Toast.LENGTH_LONG).show();
+        }
+        else {
+            Toast.makeText(context, "Deletion Completed", Toast.LENGTH_LONG).show();
+        }
     }
 }

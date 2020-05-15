@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.TextView;
 
 
@@ -20,6 +23,7 @@ public class DataAdapterClass extends RecyclerView.Adapter<DataAdapterClass.View
     private Context context;
     private Activity activity;
     private ArrayList array_id, array_label, array_date, array_time, array_notes;
+    Animation animation;
     int position;
     public DataAdapterClass(Activity activity, Context context, ArrayList array_id,
                             ArrayList array_label, ArrayList array_date, ArrayList array_time, ArrayList array_notes) {
@@ -42,7 +46,7 @@ public class DataAdapterClass extends RecyclerView.Adapter<DataAdapterClass.View
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull  ViewHolder holder, final int position) {
         this.position = position;
         holder.labelView.setText(String.valueOf(array_label.get(position)));
         holder.dateView.setText(String.valueOf(array_date.get(position)));
@@ -79,6 +83,8 @@ public class DataAdapterClass extends RecyclerView.Adapter<DataAdapterClass.View
             timeView = itemView.findViewById(R.id.re_time);
             noteView = itemView.findViewById(R.id.re_note);
             mainLayout = itemView.findViewById(R.id.mainLayout);
+            animation = AnimationUtils.loadAnimation(context,R.anim.translate_anim);
+            mainLayout.setAnimation(animation);
         }
     }
 }
