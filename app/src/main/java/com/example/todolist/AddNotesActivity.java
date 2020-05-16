@@ -16,6 +16,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -251,9 +252,14 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
                    setAlarm(view);
                }
                sendOnChannel1();
-               Intent intent = new Intent(AddNotesActivity.this, MainActivity.class);
-               startActivity(intent);
-               finish();
+               new Handler().postDelayed(new Runnable() {
+                   @Override
+                   public void run() {
+                       Intent intent = new Intent(AddNotesActivity.this, MainActivity.class);
+                       startActivity(intent);
+                       finish();
+                   }
+               }, 500);
            }
        });
     }
@@ -261,9 +267,6 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
     public void sendOnChannel1(){
         Intent ActivityIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, ActivityIntent, 0);
-    /*    Intent BroadcastIntent = new Intent(this, NotificationRecivier.class);
-        BroadcastIntent.putExtra("Toast Message", "Edit Message");
-        PendingIntent ActionIntent = PendingIntent.getBroadcast(this, 0, BroadcastIntent,PendingIntent.FLAG_UPDATE_CURRENT);*/
         Notification notification = new NotificationCompat.Builder(this, NotificationChannelClass.CHANNEL_1_ID)
                 .setSmallIcon(R.drawable.poll)
                 .setContentTitle("Remainder")
@@ -274,7 +277,6 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
                 .setColor(getResources().getColor(R.color.colorPrimary))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_REMINDER).build();
-        //  .addAction(R.mipmap.ic_launcher, "Toast", ActionIntent)
 
         notificationManager.notify(1, notification);
 

@@ -36,27 +36,14 @@ public class WelcomeActivity extends AppCompatActivity {
         logotext.setAnimation(bottomAnim);
         slogan.setAnimation(bottomAnim);
 
-        /*new Handler().postDelayed(new Runnable() {
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
                 finish();
             }
-        }, 1500);*/
+        }, 1500);
 
-    }
-
-    public void logout(View view){
-        SessionManagement sessionManagement = new SessionManagement(WelcomeActivity.this);
-        sessionManagement.removeSession();
-
-        moveToLogin();
-    }
-
-    private void moveToLogin() {
-        Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
     }
 }
