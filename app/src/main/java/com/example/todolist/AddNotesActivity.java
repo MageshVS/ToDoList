@@ -12,6 +12,7 @@ import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -51,6 +52,8 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
     TimePickerDialog.OnTimeSetListener timeSetListener;
 
     public Databasehelper databasehelper;
+    private int code;
+    public String nickname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,9 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
         toolbar.setTitleTextAppearance(this, R.style.righteous_regular);
         setSupportActionBar(toolbar);
 
+        nickname = getIntent().getStringExtra("nickname");
+
+        Toast.makeText(getApplicationContext(),"bundle"+nickname, Toast.LENGTH_LONG).show();
         databasehelper = new Databasehelper(this);
         labelSpinner = (Spinner) findViewById(R.id.labelSpinner);
         remainderToggle = (ToggleButton)findViewById(R.id.toggleButton);
@@ -274,12 +280,18 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
 
     }
     public void setAlarm(View v){
+        Cursor cursor = databasehelper.viewAllData(nickname);
+        if(cursor.getCount() != 0){
+            cursor.moveToLast();
+            code = cursor.getInt(0);
+        }
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, AlarmReciver.class);
+        intent.putExtra("Code", code);
         intent.putExtra("Title", label);
         intent.putExtra("Notes", notesView.getText().toString());
         //startService(intent);
-        PendingIntent pendingIntentAlarm = PendingIntent.getBroadcast(getApplicationContext(),1, intent, 0);
+        PendingIntent pendingIntentAlarm = PendingIntent.getBroadcast(getApplicationContext(),code, intent, 0);
 
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(System.currentTimeMillis());
@@ -295,7 +307,7 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntentAlarm);
     }
     public void addDataToDatabsse(){
-        boolean isInserted = databasehelper.insertData(label, dateView.getText().toString(),
+        boolean isInserted = databasehelper.insertData(nickname,label, dateView.getText().toString(),
                 timeView.getText().toString(), notesView.getText().toString());
         if(isInserted){
             Toast.makeText(getApplicationContext(), "Inserted Successfully", Toast.LENGTH_LONG).show();

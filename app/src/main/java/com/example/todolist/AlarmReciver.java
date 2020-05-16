@@ -20,9 +20,10 @@ public class AlarmReciver extends BroadcastReceiver {
         notificationManager = NotificationManagerCompat.from(context);
         Toast.makeText(context, " Alarm Message", Toast.LENGTH_LONG).show();
         Intent ActivityIntent = new Intent(context, MainActivity.class);
+        Integer request_code = intent.getIntExtra("Code",0);
         String title = intent.getStringExtra("Title");
         String notes = intent.getStringExtra("Notes");
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, ActivityIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, request_code, ActivityIntent, 0);
     /*    Intent BroadcastIntent = new Intent(this, NotificationRecivier.class);
         BroadcastIntent.putExtra("Toast Message", "Edit Message");
         PendingIntent ActionIntent = PendingIntent.getBroadcast(this, 0, BroadcastIntent,PendingIntent.FLAG_UPDATE_CURRENT);*/

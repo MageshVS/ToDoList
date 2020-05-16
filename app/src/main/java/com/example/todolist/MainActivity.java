@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView emptyImageView;
     private RecyclerView recyclerView;
     public FloatingActionButton floatingActionButton;
+    String nickname;
 
 
     @Override
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitleTextAppearance(this, R.style.righteous_regular);
         setSupportActionBar(toolbar);
 
+        nickname = getIntent().getStringExtra("nickname");
         databasehelper = new Databasehelper(this);
         emptyImageView = (ImageView)findViewById(R.id.emptyImageView);
         emptyTextView = (TextView)findViewById(R.id.emptytextView);
@@ -61,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent floatIntent = new Intent(MainActivity.this, AddNotesActivity.class);
+                floatIntent.putExtra("nickname", nickname);
                 startActivity(floatIntent);
             }
         });
@@ -72,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         array_time = new ArrayList<>();
         array_notes = new ArrayList<>();
 
+
         viewData();
 
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
@@ -79,10 +83,13 @@ public class MainActivity extends AppCompatActivity {
                 array_id, array_label, array_date, array_time, array_notes);
         recyclerView.setAdapter(dataAdapterClass);
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+
+
     }
 
     public void viewData() {
-        Cursor cursor = databasehelper.viewAllData();
+        String nickname = getIntent().getStringExtra("nickname");
+        Cursor cursor = databasehelper.viewAllData(nickname);
 
         if (cursor.getCount() == 0) {
             emptyImageView.setVisibility(View.VISIBLE);
@@ -98,6 +105,18 @@ public class MainActivity extends AppCompatActivity {
                 array_notes.add(cursor.getString(4));
             }
         }
+    }
+    public void logout(View view){
+        SessionManagement sessionManagement = new SessionManagement(MainActivity.this);
+        sessionManagement.removeSession();
+
+        moveToLogin();
+    }
+
+    private void moveToLogin() {
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
 }
