@@ -2,9 +2,12 @@ package com.example.todolist;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -24,6 +27,7 @@ public class Databasehelper extends SQLiteOpenHelper {
     public Databasehelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, 1);
         this.context = context;
+
     }
 
     @Override
@@ -82,7 +86,7 @@ public class Databasehelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public void updateData(String row_id, String label, String date, String time, String notes){
+    public void updateData(String nickname, String row_id, String label, String date, String time, String notes){
         SQLiteDatabase database = getWritableDatabase();
         ContentValues contentV = new ContentValues();
         contentV.put(COLUMN_1, label);
@@ -90,7 +94,8 @@ public class Databasehelper extends SQLiteOpenHelper {
         contentV.put(COLUMN_3, time);
         contentV.put(COLUMN_4, notes);
 
-        long result = database.update(TABLE_NAME, contentV,"ID=?", new String[]{row_id});
+        String USER_TABLE_NAME = TABLE_NAME+"_"+nickname;
+        long result = database.update(USER_TABLE_NAME, contentV,"ID=?", new String[]{row_id});
         if(result == -1){
             Toast.makeText(context, "Failed To Success", Toast.LENGTH_LONG).show();
         }
@@ -99,9 +104,10 @@ public class Databasehelper extends SQLiteOpenHelper {
         }
     }
 
-    public void deleteOneRow(String id){
+    public void deleteOneRow(String nickname, String id){
         SQLiteDatabase database = getWritableDatabase();
-        long result = database.delete(TABLE_NAME,"id=?", new String[]{id});
+        String USER_TABLE_NAME = TABLE_NAME+"_"+nickname;
+        long result = database.delete(USER_TABLE_NAME,"id=?", new String[]{id});
         if(result == -1){
             Toast.makeText(context, "Deletion Failed", Toast.LENGTH_LONG).show();
         }

@@ -7,8 +7,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -23,6 +25,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     Databasehelper databasehelper;
+    SharedPreferences sharedPreferences;
 
     public ArrayList<String> array_id,array_label,array_date,array_time,array_notes;
 
@@ -32,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView emptyImageView;
     private RecyclerView recyclerView;
     public FloatingActionButton floatingActionButton;
-    String nickname;
+    private String nickname;
 
 
     @Override
@@ -53,7 +56,10 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitleTextAppearance(this, R.style.righteous_regular);
         setSupportActionBar(toolbar);
 
-        nickname = getIntent().getStringExtra("nickname");
+        sharedPreferences = getSharedPreferences("Session",MODE_PRIVATE);
+        nickname = sharedPreferences.getString("Session_user","");
+        Toast.makeText(getApplicationContext(),"n is "+nickname, Toast.LENGTH_LONG).show();
+
         databasehelper = new Databasehelper(this);
         emptyImageView = (ImageView)findViewById(R.id.emptyImageView);
         emptyTextView = (TextView)findViewById(R.id.emptytextView);
@@ -63,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent floatIntent = new Intent(MainActivity.this, AddNotesActivity.class);
-                floatIntent.putExtra("nickname", nickname);
                 startActivity(floatIntent);
             }
         });
@@ -88,9 +93,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void viewData() {
-        String nickname = getIntent().getStringExtra("nickname");
         Cursor cursor = databasehelper.viewAllData(nickname);
-
         if (cursor.getCount() == 0) {
             emptyImageView.setVisibility(View.VISIBLE);
             emptyTextView.setVisibility(View.VISIBLE);
@@ -109,7 +112,6 @@ public class MainActivity extends AppCompatActivity {
     public void logout(View view){
         SessionManagement sessionManagement = new SessionManagement(MainActivity.this);
         sessionManagement.removeSession();
-
         moveToLogin();
     }
 

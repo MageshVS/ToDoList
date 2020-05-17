@@ -35,10 +35,6 @@ public class LoginActivity extends AppCompatActivity {
         login = (Button)findViewById(R.id.loginBtn);
         warningMessage = (TextView)findViewById(R.id.warningMessage);
 
-
-
-        sharedPreferences = getSharedPreferences("Session",0);
-
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,6 +61,20 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        checkUser();
+    }
+    public void checkUser(){
+        SessionManagement sessionManagement = new SessionManagement(LoginActivity.this);
+        String isLoggedIn = sessionManagement.getSession();
+        if(isLoggedIn !=  "logout"){
+            moveToMainActivity();
+        }
+        else {
+        }
+    }
     public void login(View view){
         User user = new User(nickname);
         SessionManagement sessionManagement = new SessionManagement(LoginActivity.this);
@@ -77,20 +87,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private void moveToMainActivity() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        intent.putExtra("nickname", nickname);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        SessionManagement sessionManagement = new SessionManagement(LoginActivity.this);
-        String isLoggedIn = sessionManagement.getSession();
-        if(isLoggedIn != "a"){
-            moveToMainActivity();
-        }
-        else {
-        }
-    }
+
 }

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff">
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="200dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginStart="140dp"
+        android:src="@drawable/poll"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/logotext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textSize="40dp"
+        android:textColor="@color/colorPrimary"
+        android:fontFamily="@font/righteous_regular"
+        app:layout_constraintStart_toEndOf="@id/logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:id="@+id/slogan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Because Time Matters!"
+        android:fontFamily="@font/acme_regular"
+        android:textSize="15dp"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintStart_toStartOf="@id/logotext"
+        app:layout_constraintEnd_toEndOf="@id/logotext"
+        app:layout_constraintTop_toBottomOf="@id/logotext"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

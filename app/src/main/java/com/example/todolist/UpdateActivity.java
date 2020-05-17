@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -30,7 +31,7 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
     TextView dateUpdateView, timeUpdateView, labelUpdateView;
     EditText notesUpdateView;
     Button update, deleteOneRow;
-    String label, format;
+    String label, format, nickname;
     ArrayList<String> labelArray;
     private  int hour_for_alarm ,minute_for_alarm, day_for_alarm, month_for_alarm, year_for_alarm;
     String update_id, update_label, update_date, update_time, update_notes;
@@ -38,6 +39,8 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
     DatePickerDialog.OnDateSetListener setListener;
     TimePickerDialog.OnTimeSetListener timeSetListener;
     private Databasehelper databasehelper;
+    SharedPreferences sharedPreferences;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,10 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary, null));
         toolbar.setTitleTextAppearance(this, R.style.righteous_regular);
         setSupportActionBar(toolbar);
+
+        sharedPreferences = getSharedPreferences("Session",MODE_PRIVATE);
+        nickname = sharedPreferences.getString("Session_user","");
+        Toast.makeText(getApplicationContext(),"n is "+nickname, Toast.LENGTH_LONG).show();
 
         labelUpdateView = (TextView)findViewById(R.id.update_label);
         spinner = (Spinner) findViewById(R.id.update_labelSpinner);
@@ -222,7 +229,7 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
                 update_date = dateUpdateView.getText().toString();
                 update_time = timeUpdateView.getText().toString();
                 update_notes = notesUpdateView.getText().toString();
-                databasehelper.updateData(update_id,update_label,update_date,update_time,update_notes);
+                databasehelper.updateData(nickname,update_id,update_label,update_date,update_time,update_notes);
                 Intent updateIntent = new Intent(UpdateActivity.this, MainActivity.class);
                 startActivity(updateIntent);
             }
@@ -232,7 +239,7 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
             @Override
             public void onClick(View view) {
                 Databasehelper databasehelper = new Databasehelper(UpdateActivity.this);
-                databasehelper.deleteOneRow(update_id);
+                databasehelper.deleteOneRow(nickname,update_id);
                 finish();
             }
         });

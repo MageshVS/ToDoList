@@ -12,6 +12,7 @@ import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -54,6 +55,7 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
 
     public Databasehelper databasehelper;
     private int code;
+    SharedPreferences sharedPreferences;
     public String nickname;
 
     @Override
@@ -66,9 +68,10 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
         toolbar.setTitleTextAppearance(this, R.style.righteous_regular);
         setSupportActionBar(toolbar);
 
-        nickname = getIntent().getStringExtra("nickname");
+        sharedPreferences = getSharedPreferences("Session",MODE_PRIVATE);
+        nickname = sharedPreferences.getString("Session_user","");
+        Toast.makeText(getApplicationContext(),"n is "+nickname, Toast.LENGTH_LONG).show();
 
-        Toast.makeText(getApplicationContext(),"bundle"+nickname, Toast.LENGTH_LONG).show();
         databasehelper = new Databasehelper(this);
         labelSpinner = (Spinner) findViewById(R.id.labelSpinner);
         remainderToggle = (ToggleButton)findViewById(R.id.toggleButton);
@@ -252,14 +255,9 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
                    setAlarm(view);
                }
                sendOnChannel1();
-               new Handler().postDelayed(new Runnable() {
-                   @Override
-                   public void run() {
-                       Intent intent = new Intent(AddNotesActivity.this, MainActivity.class);
-                       startActivity(intent);
-                       finish();
-                   }
-               }, 500);
+               Intent intent = new Intent(AddNotesActivity.this, MainActivity.class);
+               startActivity(intent);
+               finish();
            }
        });
     }
