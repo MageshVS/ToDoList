@@ -35,7 +35,117 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent" >
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/abcde">
+
+                    <TextView
+                        android:id="@+id/cardViewText1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hey User"
+                        android:textSize="20dp"
+                        android:fontFamily="@font/worksans_light"
+                        android:textColor="#fff"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:layout_margin="20dp" />
+
+                    <TextView
+                        android:id="@+id/whatsYourPlan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="What's Your Plan?"
+                        android:fontFamily="@font/worksans_regular"
+                        android:textSize="16dp"
+                        android:textColor="#fff"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/cardViewText1"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="15dp"/>
+
+                    <ImageView
+                        android:id="@+id/cloudIcon"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_marginStart="40dp"
+                        android:layout_marginTop="20dp"
+                        android:src="@drawable/cloud"
+                        app:layout_constraintBottom_toBottomOf="@id/whatsYourPlan"
+                        app:layout_constraintStart_toEndOf="@id/whatsYourPlan"
+                        app:layout_constraintTop_toTopOf="@id/cardViewText1" />
+
+                    <TextView
+                        android:id="@+id/temperatureView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="24C"
+                        android:textColor="#fff"
+                        android:textSize="26dp"
+                        android:layout_margin="20dp"
+                        app:layout_constraintStart_toEndOf="@id/cloudIcon"
+                        app:layout_constraintTop_toTopOf="@id/cloudIcon" />
+
+                    <TextView
+                        android:id="@+id/descView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="cloud"
+                        android:textSize="20dp"
+                        android:fontFamily="@font/worksans_light"
+                        android:textColor="#fff"
+                        app:layout_constraintStart_toStartOf="@id/temperatureView"
+                        app:layout_constraintEnd_toEndOf="@id/temperatureView"
+                        app:layout_constraintTop_toBottomOf="@id/temperatureView"/>
+
+                    <TextView
+                        android:id="@+id/dateText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="06, May"
+                        android:textSize="20dp"
+                        android:textColor="#fff"
+                        android:layout_marginStart="5dp"
+                        app:layout_constraintStart_toEndOf="@id/dateIcon"
+                        app:layout_constraintTop_toTopOf="@id/dateIcon"/>
+
+                    <ImageView
+                        android:id="@+id/dateIcon"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/date"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/whatsYourPlan"
+                        android:layout_marginTop="40dp"
+                        android:layout_marginStart="20dp"/>
+
+                    <ImageView
+                        android:id="@+id/timeIcon"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="40dp"
+                        app:layout_constraintStart_toEndOf="@id/dateText"
+                        app:layout_constraintTop_toTopOf="@id/dateIcon"
+                        android:src="@drawable/time"/>
+
+                    <TextView
+                        android:id="@+id/timeText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="12:20 P.M"
+                        android:textColor="#fff"
+                        android:textSize="20dp"
+                        android:layout_marginStart="5dp"
+                        app:layout_constraintStart_toEndOf="@id/timeIcon"
+                        app:layout_constraintTop_toTopOf="@id/dateText"/>
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:id="@+id/spamText"

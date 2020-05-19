@@ -9,8 +9,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,7 +22,18 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,14 +43,41 @@ public class MainActivity extends AppCompatActivity {
     public ArrayList<String> array_id,array_label,array_date,array_time,array_notes;
 
     public ListView listView;
-    private TextView textView, emptyTextView;
+    public TextView textView, emptyTextView,
+            username, dateText, timeText, temperatureText, descText;
     private Button button;
     private ImageView emptyImageView;
     private RecyclerView recyclerView;
     public FloatingActionButton floatingActionButton;
     private String nickname;
 
+    class Weather extends AsyncTask<String, Void, String>{
 
+        @Override
+        protected String doInBackground(String... address) {
+            try {
+                URL url = new URL(address[0]);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.connect();
+
+                InputStream inputStream = connection.getInputStream();
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+
+                int data = inputStreamReader.read();
+                String content = "";
+                char ch;
+                while (data != -1){
+                    ch = (char)data;
+                    content = content + ch;
+                    data = inputStreamReader.read();
+                }
+                return content;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -63,6 +103,28 @@ public class MainActivity extends AppCompatActivity {
         databasehelper = new Databasehelper(this);
         emptyImageView = (ImageView)findViewById(R.id.emptyImageView);
         emptyTextView = (TextView)findViewById(R.id.emptytextView);
+        username = (TextView)findViewById(R.id.userName);
+        dateText = (TextView)findViewById(R.id.dateText);
+        timeText = (TextView)findViewById(R.id.timeText);
+        temperatureText = (TextView)findViewById(R.id.temperatureView);
+        descText = (TextView)findViewById(R.id.descView);
+
+
+        username.setText(nickname);
+
+        Calendar calendar  = Calendar.getInstance();
+        int date = calendar.get(Calendar.DATE);
+        int month = calendar.get(Calendar.MONTH);
+        Format dateFormatData = new SimpleDateFormat("EEE, dd/MM");
+        Format timeFormatData = new SimpleDateFormat( "HH:mm a");
+        String dateFormat = dateFormatData.format(new Date());
+        String timeFormat = timeFormatData.format(new Date());
+
+        updateWeatherInfo();
+
+
+        dateText.setText(dateFormat);
+        timeText.setText(timeFormat);
 
         floatingActionButton = (FloatingActionButton)findViewById(R.id.floatbtn);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +151,41 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(dataAdapterClass);
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
+
+    }
+
+    public void updateWeatherInfo() {
+        String content;
+        Weather weather = new Weather();
+        try {
+            content = weather.execute("https://openweathermap.org/data/2.5/weather?q=Chennai&appid=439d4b804bc8187953eb36d2a8c26a02").get();
+            Log.i("content", content);
+
+            JSONObject jsonObject = new JSONObject(content);
+            String weatherData = jsonObject.getString("weather");
+            String mainTemperature = jsonObject.getString("main");
+
+            JSONArray jsonArray = new JSONArray(weatherData);
+
+            String main = "";
+            String desc = "";
+
+            for(int i = 0; i<jsonArray.length(); i++){
+                JSONObject weatherPart = jsonArray.getJSONObject(i);
+                main = weatherPart.getString("main");
+                desc = weatherPart.getString("description");
+            }
+            JSONObject mainTemp = new JSONObject(mainTemperature);
+            String tempreature = mainTemp.getString("temp");
+            String temp = tempreature.substring(0,2)+"\u00B0"+"C";
+            Toast.makeText(MainActivity.this, "main "+main+" desc "+desc+" temp "+tempreature, Toast.LENGTH_LONG).show();
+
+            temperatureText.setText(temp);
+            descText.setText(desc);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "weatherApi"+e, Toast.LENGTH_LONG).show();
+        }
 
     }
 
