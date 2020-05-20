@@ -78,7 +78,7 @@ public class Databasehelper extends SQLiteOpenHelper {
     public Cursor viewAllData(String nickname){
         String query;
         Cursor cursor = null;
-        if(nickname != "logout"){
+        if(!(nickname.equals("logout"))){
             String USER_TABLE_NAME = TABLE_NAME+"_"+nickname;
             query = "SELECT * FROM " + USER_TABLE_NAME;
             SQLiteDatabase database = this.getReadableDatabase();
@@ -86,7 +86,6 @@ public class Databasehelper extends SQLiteOpenHelper {
             if(database != null){
                 cursor = database.rawQuery(query, null);
             }
-
         }
         return cursor;
     }
@@ -102,10 +101,10 @@ public class Databasehelper extends SQLiteOpenHelper {
         String USER_TABLE_NAME = TABLE_NAME+"_"+nickname;
         long result = database.update(USER_TABLE_NAME, contentV,"ID=?", new String[]{row_id});
         if(result == -1){
-            Toast.makeText(context, "Failed To Success", Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, "Failed To Success", Toast.LENGTH_LONG).show();
         }
         else{
-            Toast.makeText(context, "Update Success ", Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, "Update Success ", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -114,10 +113,10 @@ public class Databasehelper extends SQLiteOpenHelper {
         String USER_TABLE_NAME = TABLE_NAME+"_"+nickname;
         long result = database.delete(USER_TABLE_NAME,"id=?", new String[]{id});
         if(result == -1){
-            Toast.makeText(context, "Deletion Failed", Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, "Deletion Failed", Toast.LENGTH_LONG).show();
         }
         else {
-            Toast.makeText(context, "Deletion Completed", Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, "Deletion Completed", Toast.LENGTH_LONG).show();
         }
     }
 }

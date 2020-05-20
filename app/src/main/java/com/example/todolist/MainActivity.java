@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences("Session",MODE_PRIVATE);
         nickname = sharedPreferences.getString("Session_user","");
-        Toast.makeText(getApplicationContext(),"n is "+nickname, Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(),"n is "+nickname, Toast.LENGTH_LONG).show();
 
         databasehelper = new Databasehelper(this);
         emptyImageView = (ImageView)findViewById(R.id.emptyImageView);
@@ -147,7 +147,6 @@ public class MainActivity extends AppCompatActivity {
         array_notes = new ArrayList<>();
 
 
-        viewData();
 
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         DataAdapterClass dataAdapterClass = new DataAdapterClass(MainActivity.this, this,
@@ -155,8 +154,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(dataAdapterClass);
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
-
+        viewData();
     }
+
 
     public void updateWeatherInfo() {
         String content;
@@ -194,18 +194,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void viewData() {
-        Cursor cursor = null;
-        try {
-            cursor = databasehelper.viewAllData(nickname);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Cursor cursor ;
+        cursor = databasehelper.viewAllData(nickname);
         if (cursor.getCount() == 0) {
             emptyImageView.setVisibility(View.VISIBLE);
             emptyTextView.setVisibility(View.VISIBLE);
-            Toast.makeText(getApplicationContext(), "Empty", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "Empty", Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(getApplicationContext(), " not Empty", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), " not Empty", Toast.LENGTH_LONG).show();
             while (cursor.moveToNext()) {
                 array_id.add(cursor.getString(0));
                 array_label.add(cursor.getString(1));
@@ -215,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-    public void logout(View view){
+    public void logout(){
         SessionManagement sessionManagement = new SessionManagement(MainActivity.this);
         sessionManagement.removeSession();
         moveToLogin();
@@ -228,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
-    /*@Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
@@ -241,5 +237,5 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }*/
+    }
 }

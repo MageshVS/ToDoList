@@ -70,7 +70,7 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
 
         sharedPreferences = getSharedPreferences("Session",MODE_PRIVATE);
         nickname = sharedPreferences.getString("Session_user","");
-        Toast.makeText(getApplicationContext(),"n is "+nickname, Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(),"n is "+nickname, Toast.LENGTH_LONG).show();
 
         databasehelper = new Databasehelper(this);
         labelSpinner = (Spinner) findViewById(R.id.labelSpinner);
@@ -310,10 +310,10 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
         boolean isInserted = databasehelper.insertData(nickname,label, dateView.getText().toString(),
                 timeView.getText().toString(), notesView.getText().toString());
         if(isInserted){
-            Toast.makeText(getApplicationContext(), "Inserted Successfully", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "Inserted Successfully", Toast.LENGTH_LONG).show();
         }
         else{
-            Toast.makeText(getApplicationContext(), "Insertion Failed", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "Insertion Failed", Toast.LENGTH_LONG).show();
         }
 
     }

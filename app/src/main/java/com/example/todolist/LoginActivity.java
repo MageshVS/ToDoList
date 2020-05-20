@@ -48,16 +48,16 @@ public class LoginActivity extends AppCompatActivity {
                     warningMessage.setVisibility(View.VISIBLE);
                 }
                 else{
-                    Toast.makeText(getApplicationContext(),nickname,Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(),nickname,Toast.LENGTH_LONG).show();
                     warningMessage.setVisibility(View.GONE);
                     Databasehelper databasehelper = new Databasehelper(LoginActivity.this);
                     boolean result = databasehelper.insertUser(nickname);
                     if(result == true){
-                        Toast.makeText(getApplicationContext(), "UPDATED", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(), "UPDATED", Toast.LENGTH_LONG).show();
                         login(view);
                     }
                     else {
-                        Toast.makeText(getApplicationContext(), "UPDATE FAILED", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(), "UPDATE FAILED", Toast.LENGTH_LONG).show();
 
                     }
                 }
@@ -72,12 +72,12 @@ public class LoginActivity extends AppCompatActivity {
     public void checkUser(){
         SessionManagement sessionManagement = new SessionManagement(LoginActivity.this);
         String isLoggedIn = sessionManagement.getSession();
-        Toast.makeText(getApplicationContext(),"isLoggedIn is "+isLoggedIn, Toast.LENGTH_LONG).show();
-        if(isLoggedIn !=  "logout"){
-            moveToMainActivity();
+        //Toast.makeText(getApplicationContext(),"isLoggedIn is "+isLoggedIn, Toast.LENGTH_LONG).show();
+        if(isLoggedIn.equals("logout")){
+
         }
         else {
-
+            moveToMainActivity();
         }
     }
     public void login(View view){
@@ -92,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void moveToMainActivity() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
     }

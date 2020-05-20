@@ -87,7 +87,7 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (i<4) {
+                if (i!=0 && i<4) {
                    // Toast.makeText(getApplicationContext(), (String)adapterView.getItemAtPosition(i), Toast.LENGTH_SHORT).show();
                     update_label = (String) adapterView.getItemAtPosition(i);
                 }
@@ -260,7 +260,7 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
             timeUpdateView.setText(update_time);
             notesUpdateView.setText(update_notes);
         } else {
-            Toast.makeText(getApplicationContext(), "no data", Toast.LENGTH_LONG).show();
+           // Toast.makeText(getApplicationContext(), "no data", Toast.LENGTH_LONG).show();
         }
     }
     public void openDialog(){
@@ -270,7 +270,7 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
     @Override
     public void applyTexts(String alert_label) {
         update_label = alert_label;
-        Toast.makeText(getApplicationContext(),update_label, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(),update_label, Toast.LENGTH_SHORT).show();
     }
 
 }
