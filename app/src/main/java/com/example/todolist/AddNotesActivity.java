@@ -94,8 +94,8 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
         labelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (i<4) {
-                     Toast.makeText(getApplicationContext(), (String)adapterView.getItemAtPosition(i), Toast.LENGTH_SHORT).show();
+                if (i!=0 && i<4) {
+                     //Toast.makeText(getApplicationContext(), (String)adapterView.getItemAtPosition(i), Toast.LENGTH_SHORT).show();
                      label = (String) adapterView.getItemAtPosition(i);
                 }
                 else if(i == labelArray.size()-1){

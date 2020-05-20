@@ -35,6 +35,9 @@ public class LoginActivity extends AppCompatActivity {
         login = (Button)findViewById(R.id.loginBtn);
         warningMessage = (TextView)findViewById(R.id.warningMessage);
 
+        sharedPreferences = getSharedPreferences("Session",MODE_PRIVATE);
+        nickname = sharedPreferences.getString("Session_user","");
+        //Toast.makeText(getApplicationContext(),"n is "+nickname, Toast.LENGTH_LONG).show();
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,10 +72,12 @@ public class LoginActivity extends AppCompatActivity {
     public void checkUser(){
         SessionManagement sessionManagement = new SessionManagement(LoginActivity.this);
         String isLoggedIn = sessionManagement.getSession();
+        Toast.makeText(getApplicationContext(),"isLoggedIn is "+isLoggedIn, Toast.LENGTH_LONG).show();
         if(isLoggedIn !=  "logout"){
             moveToMainActivity();
         }
         else {
+
         }
     }
     public void login(View view){
@@ -89,6 +94,7 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+        finish();
     }
 
 

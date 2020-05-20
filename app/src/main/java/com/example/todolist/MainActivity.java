@@ -1,5 +1,6 @@
 package com.example.todolist;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -13,6 +14,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -34,6 +37,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.zip.Inflater;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -81,11 +85,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode ==1){
-            recreate();
+        if (requestCode == 1) {
+            finish();
+            startActivity(getIntent());
         }
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -178,19 +182,24 @@ public class MainActivity extends AppCompatActivity {
             JSONObject mainTemp = new JSONObject(mainTemperature);
             String tempreature = mainTemp.getString("temp");
             String temp = tempreature.substring(0,2)+"\u00B0"+"C";
-            Toast.makeText(MainActivity.this, "main "+main+" desc "+desc+" temp "+tempreature, Toast.LENGTH_LONG).show();
+          //  Toast.makeText(MainActivity.this, "main "+main+" desc "+desc+" temp "+tempreature, Toast.LENGTH_LONG).show();
 
             temperatureText.setText(temp);
             descText.setText(desc);
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(getApplicationContext(), "weatherApi"+e, Toast.LENGTH_LONG).show();
+           // Toast.makeText(getApplicationContext(), "weatherApi"+e, Toast.LENGTH_LONG).show();
         }
 
     }
 
     public void viewData() {
-        Cursor cursor = databasehelper.viewAllData(nickname);
+        Cursor cursor = null;
+        try {
+            cursor = databasehelper.viewAllData(nickname);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (cursor.getCount() == 0) {
             emptyImageView.setVisibility(View.VISIBLE);
             emptyTextView.setVisibility(View.VISIBLE);
@@ -216,6 +225,21 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+        finish();
     }
 
+    /*@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == R.id.logoutit){
+            logout();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }*/
 }

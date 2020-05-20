@@ -76,12 +76,17 @@ public class Databasehelper extends SQLiteOpenHelper {
         }
     }
     public Cursor viewAllData(String nickname){
-        String USER_TABLE_NAME = TABLE_NAME+"_"+nickname;
-        String query = "SELECT * FROM " + USER_TABLE_NAME;
-        SQLiteDatabase database = this.getReadableDatabase();
+        String query;
         Cursor cursor = null;
-        if(database != null){
-            cursor = database.rawQuery(query, null);
+        if(nickname != "logout"){
+            String USER_TABLE_NAME = TABLE_NAME+"_"+nickname;
+            query = "SELECT * FROM " + USER_TABLE_NAME;
+            SQLiteDatabase database = this.getReadableDatabase();
+
+            if(database != null){
+                cursor = database.rawQuery(query, null);
+            }
+
         }
         return cursor;
     }

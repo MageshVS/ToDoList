@@ -54,7 +54,7 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
 
         sharedPreferences = getSharedPreferences("Session",MODE_PRIVATE);
         nickname = sharedPreferences.getString("Session_user","");
-        Toast.makeText(getApplicationContext(),"n is "+nickname, Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(),"n is "+nickname, Toast.LENGTH_LONG).show();
 
         labelUpdateView = (TextView)findViewById(R.id.update_label);
         spinner = (Spinner) findViewById(R.id.update_labelSpinner);
@@ -88,7 +88,7 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i<4) {
-                    Toast.makeText(getApplicationContext(), (String)adapterView.getItemAtPosition(i), Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getApplicationContext(), (String)adapterView.getItemAtPosition(i), Toast.LENGTH_SHORT).show();
                     update_label = (String) adapterView.getItemAtPosition(i);
                 }
                 else if(i == 4){
@@ -251,7 +251,7 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
 
             update_id = getIntent().getStringExtra("ID");
             a_update_label = getIntent().getStringExtra("LABEL");
-            Toast.makeText(getApplicationContext(), "a_update"+a_update_label,Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "a_update"+a_update_label,Toast.LENGTH_LONG).show();
             update_date = getIntent().getStringExtra("DATE");
             update_time = getIntent().getStringExtra("TIME");
             update_notes = getIntent().getStringExtra("NOTES");

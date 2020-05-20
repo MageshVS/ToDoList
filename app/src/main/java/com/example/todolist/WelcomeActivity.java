@@ -30,16 +30,16 @@ public class WelcomeActivity extends AppCompatActivity {
 
         imageView = (ImageView)findViewById(R.id.logo);
         logotext = (TextView)findViewById(R.id.logotext);
-        slogan = (TextView)findViewById(R.id.slogan);
+       // slogan = (TextView)findViewById(R.id.slogan);
 
         imageView.setAnimation(topAnim);
         logotext.setAnimation(bottomAnim);
-        slogan.setAnimation(bottomAnim);
+       // slogan.setAnimation(bottomAnim);
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();
             }
