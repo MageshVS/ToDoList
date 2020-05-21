@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,8 +56,18 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     public FloatingActionButton floatingActionButton;
     private String nickname;
-
+    private ProgressDialog progressDialog;
     class Weather extends AsyncTask<String, Void, String>{
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(MainActivity.this);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setMessage("Loading..");
+            progressDialog.show();
+
+        }
 
         @Override
         protected String doInBackground(String... address) {
@@ -81,6 +93,12 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            progressDialog.dismiss();
+        }
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -100,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitleTextAppearance(this, R.style.righteous_regular);
         setSupportActionBar(toolbar);
 
+
         sharedPreferences = getSharedPreferences("Session",MODE_PRIVATE);
         nickname = sharedPreferences.getString("Session_user","");
         //Toast.makeText(getApplicationContext(),"n is "+nickname, Toast.LENGTH_LONG).show();
@@ -114,7 +133,8 @@ public class MainActivity extends AppCompatActivity {
         descText = (TextView)findViewById(R.id.descView);
 
 
-        username.setText(nickname);
+        String raw_nickname =nickname.replaceAll("_"," ");
+        username.setText(raw_nickname);
 
         Calendar calendar  = Calendar.getInstance();
         int date = calendar.get(Calendar.DATE);
@@ -123,8 +143,6 @@ public class MainActivity extends AppCompatActivity {
         Format timeFormatData = new SimpleDateFormat( "HH:mm a");
         String dateFormat = dateFormatData.format(new Date());
         String timeFormat = timeFormatData.format(new Date());
-
-        updateWeatherInfo();
 
 
         dateText.setText(dateFormat);
@@ -155,14 +173,16 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
         viewData();
+        updateWeatherInfo();
+
     }
 
 
     public void updateWeatherInfo() {
         String content;
-        Weather weather = new Weather();
+        MainActivity.Weather weather = new MainActivity.Weather();
         try {
-            content = weather.execute("https://openweathermap.org/data/2.5/weather?q=Chennai&appid=439d4b804bc8187953eb36d2a8c26a02").get();
+            content = weather.execute("https://api.openweathermap.org/data/2.5/weather?q=Chennai&appid=ec69d3539222343ef37b0af8e6a67423").get();
             Log.i("content", content);
 
             JSONObject jsonObject = new JSONObject(content);
@@ -223,6 +243,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+    private void moveToProfile(){
+        Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+        startActivity(intent);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -234,6 +258,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.logoutit){
             logout();
+            return true;
+        }
+        else if(item.getItemId() == R.id.profile){
+            moveToProfile();
             return true;
         }
         return super.onOptionsItemSelected(item);

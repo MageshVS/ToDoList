@@ -1,30 +1,23 @@
 package com.example.todolist;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.material.textfield.TextInputEditText;
-
-import java.util.Map;
-import java.util.Set;
 
 public class LoginActivity extends AppCompatActivity {
 
     private EditText nicknameView;
     private Button login;
-    private String nickname;
+    private String nickname, raw_nicname;
     private TextView warningMessage;
 
-    SharedPreferences sharedPreferences;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +28,11 @@ public class LoginActivity extends AppCompatActivity {
         login = (Button)findViewById(R.id.loginBtn);
         warningMessage = (TextView)findViewById(R.id.warningMessage);
 
-        sharedPreferences = getSharedPreferences("Session",MODE_PRIVATE);
-        nickname = sharedPreferences.getString("Session_user","");
-        //Toast.makeText(getApplicationContext(),"n is "+nickname, Toast.LENGTH_LONG).show();
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                nickname = nicknameView.getText().toString();
+
+                nickname = nicknameView.getText().toString().replaceAll("\\s+","_");
 
                 if(nickname.matches("")){
                     warningMessage.setText("Enter a Valid Name");
@@ -81,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
     public void login(View view){
-        User user = new User(nickname);
+        UserClass user = new UserClass(nickname);
         SessionManagement sessionManagement = new SessionManagement(LoginActivity.this);
         sessionManagement.saveSession(user);
 
@@ -94,6 +85,10 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+        progressDialog = new ProgressDialog(LoginActivity.this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Loading");
+        progressDialog.show();
         finish();
     }
 

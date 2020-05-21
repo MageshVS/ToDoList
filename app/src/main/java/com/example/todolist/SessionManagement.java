@@ -14,7 +14,7 @@ public class SessionManagement {
         sharedPreferences = context.getSharedPreferences(SHARED_PRE_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
     }
-    public void saveSession(User user){
+    public void saveSession(UserClass user){
         nickname = user.getNickname();
         editor.putString(SHARED_KEY, nickname).commit();
 

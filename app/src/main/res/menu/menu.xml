@@ -6,4 +6,9 @@
         android:icon="@drawable/logout"
         android:title="Log Out"
         app:showAsAction="never"/>
+
+    <item android:id="@+id/profile"
+        android:icon="@drawable/cloud"
+        android:title="Profile"
+        app:showAsAction="never"/>
 </menu>

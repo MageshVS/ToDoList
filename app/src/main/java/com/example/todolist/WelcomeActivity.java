@@ -2,10 +2,12 @@ package com.example.todolist;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -13,11 +15,15 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class WelcomeActivity extends AppCompatActivity {
 
     Animation topAnim, bottomAnim;
     ImageView imageView;
-    TextView logotext, slogan;
+    TextView logotext, slogan, temperatureText, descText;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,11 +36,14 @@ public class WelcomeActivity extends AppCompatActivity {
 
         imageView = (ImageView)findViewById(R.id.logo);
         logotext = (TextView)findViewById(R.id.logotext);
-       // slogan = (TextView)findViewById(R.id.slogan);
+
 
         imageView.setAnimation(topAnim);
         logotext.setAnimation(bottomAnim);
-       // slogan.setAnimation(bottomAnim);
+        //slogan.setAnimation(bottomAnim);
+
+        temperatureText = (TextView)findViewById(R.id.temperatureView);
+        descText = (TextView)findViewById(R.id.descView);
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -46,4 +55,5 @@ public class WelcomeActivity extends AppCompatActivity {
         }, 1500);
 
     }
+
 }

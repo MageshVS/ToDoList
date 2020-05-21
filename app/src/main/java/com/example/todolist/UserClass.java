@@ -1,9 +1,9 @@
 package com.example.todolist;
 
-public class User {
+public class UserClass {
     private String nickname;
 
-    public User(String nickname) {
+    public UserClass(String nickname) {
         this.nickname = nickname;
     }
 
