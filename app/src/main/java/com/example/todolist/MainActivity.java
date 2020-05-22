@@ -108,6 +108,19 @@ public class MainActivity extends AppCompatActivity {
             startActivity(getIntent());
         }
     }
+
+  /*  @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        progressDialog.dismiss();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        progressDialog.dismiss();
+    }*/
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -173,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
         viewData();
-        updateWeatherInfo();
+        //updateWeatherInfo();
 
     }
 
@@ -243,6 +256,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
     private void moveToProfile(){
         Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
         startActivity(intent);

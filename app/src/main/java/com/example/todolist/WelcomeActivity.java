@@ -36,11 +36,12 @@ public class WelcomeActivity extends AppCompatActivity {
 
         imageView = (ImageView)findViewById(R.id.logo);
         logotext = (TextView)findViewById(R.id.logotext);
+        slogan = (TextView)findViewById(R.id.slogan);
 
 
         imageView.setAnimation(topAnim);
         logotext.setAnimation(bottomAnim);
-        //slogan.setAnimation(bottomAnim);
+        slogan.setAnimation(bottomAnim);
 
         temperatureText = (TextView)findViewById(R.id.temperatureView);
         descText = (TextView)findViewById(R.id.descView);

@@ -92,5 +92,11 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(progressDialog != null && progressDialog.isShowing()){
+            progressDialog.dismiss();
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.todolist;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
@@ -18,6 +19,8 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -329,5 +332,49 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
             label = alert_label;
             labelArray.add(4, label);
             Toast.makeText(getApplicationContext(),label, Toast.LENGTH_SHORT).show();
+    }
+
+    public void logout(){
+        SessionManagement sessionManagement = new SessionManagement(AddNotesActivity.this);
+        sessionManagement.removeSession();
+        moveToLogin();
+    }
+
+    private void moveToLogin() {
+        Intent intent = new Intent(AddNotesActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    public void moveToHome(){
+        Intent intent = new Intent(AddNotesActivity.this, MainActivity.class);
+        startActivity(intent);
+    }
+    private void moveToProfile(){
+        Intent intent = new Intent(AddNotesActivity.this, ProfileActivity.class);
+        startActivity(intent);
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == R.id.logoutit){
+            logout();
+            return true;
+        }
+        else if(item.getItemId() == R.id.profile){
+            moveToProfile();
+            return true;
+        }
+        else if(item.getItemId() == R.id.home){
+            moveToHome();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

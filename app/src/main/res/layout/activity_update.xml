@@ -204,8 +204,8 @@
 
                 <Button
                     android:id="@+id/recyclerDeletebtn"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:background="@drawable/button_background_delete"
                     android:foreground="@drawable/delete_icon"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -214,8 +214,8 @@
 
                 <Button
                     android:id="@+id/update_buttoncls"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:padding="5dp"
                     android:elevation="20dp"
                     android:background="@drawable/button_background"

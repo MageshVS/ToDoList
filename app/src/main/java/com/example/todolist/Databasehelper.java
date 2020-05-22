@@ -119,4 +119,17 @@ public class Databasehelper extends SQLiteOpenHelper {
             //Toast.makeText(context, "Deletion Completed", Toast.LENGTH_LONG).show();
         }
     }
+
+    public Cursor userChartInfo(String nickname){
+        Cursor cursor = null;
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+        String USER_TABLE_NAME = TABLE_NAME+"_"+nickname;
+        String query = "SELECT LABEL, COUNT(*) FROM "+USER_TABLE_NAME+" GROUP BY label";
+        if(!nickname.equals("logout")){
+            if(sqLiteDatabase !=null){
+                cursor = sqLiteDatabase.rawQuery(query,null);
+            }
+        }
+        return cursor;
+    }
 }

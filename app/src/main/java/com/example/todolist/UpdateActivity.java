@@ -1,15 +1,22 @@
 package com.example.todolist;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import android.app.DatePickerDialog;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -40,6 +47,7 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
     TimePickerDialog.OnTimeSetListener timeSetListener;
     private Databasehelper databasehelper;
     SharedPreferences sharedPreferences;
+    private NotificationManagerCompat notificationManager;
 
 
     @Override
@@ -55,6 +63,8 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
         sharedPreferences = getSharedPreferences("Session",MODE_PRIVATE);
         nickname = sharedPreferences.getString("Session_user","");
         //Toast.makeText(getApplicationContext(),"n is "+nickname, Toast.LENGTH_LONG).show();
+
+        notificationManager = NotificationManagerCompat.from(this);
 
         labelUpdateView = (TextView)findViewById(R.id.update_label);
         spinner = (Spinner) findViewById(R.id.update_labelSpinner);
@@ -230,6 +240,7 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
                 update_time = timeUpdateView.getText().toString();
                 update_notes = notesUpdateView.getText().toString();
                 databasehelper.updateData(nickname,update_id,update_label,update_date,update_time,update_notes);
+                sendOnChannel1();
                 Intent updateIntent = new Intent(UpdateActivity.this, MainActivity.class);
                 startActivity(updateIntent);
             }
@@ -243,6 +254,24 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
                 finish();
             }
         });
+    }
+
+    public void sendOnChannel1(){
+        Intent ActivityIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, ActivityIntent, 0);
+        Notification notification = new NotificationCompat.Builder(this, NotificationChannelClass.CHANNEL_1_ID)
+                .setSmallIcon(R.drawable.poll)
+                .setContentTitle("Remainder")
+                .setContentText("Updates Successfully")
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
+                .setColor(getResources().getColor(R.color.colorPrimary))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_REMINDER).build();
+
+        notificationManager.notify(1, notification);
+
     }
 
     public void getAndSetIntentData() {
@@ -271,6 +300,50 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
     public void applyTexts(String alert_label) {
         update_label = alert_label;
         //Toast.makeText(getApplicationContext(),update_label, Toast.LENGTH_SHORT).show();
+    }
+
+    public void logout(){
+        SessionManagement sessionManagement = new SessionManagement(UpdateActivity.this);
+        sessionManagement.removeSession();
+        moveToLogin();
+    }
+
+    private void moveToLogin() {
+        Intent intent = new Intent(UpdateActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+    public void moveToHome(){
+        Intent intent = new Intent(UpdateActivity.this, MainActivity.class);
+        startActivity(intent);
+    }
+    private void moveToProfile(){
+        Intent intent = new Intent(UpdateActivity.this, ProfileActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == R.id.logoutit){
+            logout();
+            return true;
+        }
+        else if(item.getItemId() == R.id.home){
+            moveToHome();
+            return true;
+        }
+        else if(item.getItemId() == R.id.profile){
+            moveToProfile();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

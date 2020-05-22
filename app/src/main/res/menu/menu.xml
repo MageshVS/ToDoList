@@ -2,13 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/logoutit"
-        android:icon="@drawable/logout"
-        android:title="Log Out"
+    <item android:id="@+id/home"
+        android:title="Home"
         app:showAsAction="never"/>
-
+    
     <item android:id="@+id/profile"
         android:icon="@drawable/cloud"
         android:title="Profile"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/logoutit"
+        android:icon="@drawable/logout"
+        android:title="Log Out"
         app:showAsAction="never"/>
 </menu>
