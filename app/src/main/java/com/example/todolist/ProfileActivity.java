@@ -10,6 +10,10 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.anychart.AnyChart;
@@ -25,9 +29,12 @@ import java.util.List;
 public class ProfileActivity extends AppCompatActivity {
 
     private AnyChartView pieChart;
+    TextView profileUserName, profileTextView;
+    private EditText profileEditView;
+    private Button profileSaveBtn, profileEditBtn;
     SharedPreferences sharedPreferences;
     Databasehelper databasehelper;
-    String nickname;
+    String nickname, profilePhone;
 
     ArrayList<String> array_label_profile;
     ArrayList<Integer> array_activity_profile;
@@ -48,14 +55,44 @@ public class ProfileActivity extends AppCompatActivity {
         nickname = sharedPreferences.getString("Session_user","");
         Toast.makeText(getApplicationContext(),"n is "+nickname, Toast.LENGTH_LONG).show();
 
+        String raw_nickname =nickname.replaceAll("_"," ");
+
         databasehelper = new Databasehelper(this);
         array_label_profile = new ArrayList<>();
         array_activity_profile = new ArrayList<>();
 
+        profileUserName = (TextView)findViewById(R.id.profileUserName);
+        profileUserName.setText(raw_nickname);
         pieChart = (AnyChartView)findViewById(R.id.pieChart);
         viewLabelData();
 
         viewPieChart();
+
+        profileTextView = (TextView)findViewById(R.id.phoneTextView);
+        profileEditView = (EditText)findViewById(R.id.phoneEditView);
+        profileSaveBtn = (Button)findViewById(R.id.phoneSaveBtn);
+        profileEditBtn = (Button)findViewById(R.id.phoneEditBtn);
+        profileEditBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                profileTextView.setVisibility(View.GONE);
+                profileEditView.setVisibility(View.VISIBLE);
+                profileSaveBtn.setVisibility(View.VISIBLE);
+                profileEditBtn.setVisibility(View.GONE);
+            }
+        });
+        profileSaveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                profilePhone = profileEditView.getText().toString();
+                profileEditView.setVisibility(View.GONE);
+                profileTextView.setText(profilePhone);
+                profileSaveBtn.setVisibility(View.GONE);
+                profileTextView.setVisibility(View.VISIBLE);
+                profileEditBtn.setVisibility(View.VISIBLE);
+            }
+        });
+
     }
 
 
