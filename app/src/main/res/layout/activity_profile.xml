@@ -121,6 +121,8 @@
                                 android:gravity="center_vertical"
                                 android:layout_height="match_parent"
                                 android:visibility="gone"
+                                android:inputType="number"
+                                android:maxLength="10"
                                 android:textSize="16sp" />
 
                         </RelativeLayout>
@@ -179,6 +181,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:textSize="16sp"
+                                android:inputType="textEmailAddress"
                                 android:layout_marginStart="2dp"
                                 android:text="Email"/>
 
@@ -186,6 +189,7 @@
                                 android:id="@+id/emailEditView"
                                 android:layout_width="match_parent"
                                 android:gravity="center_vertical"
+                                android:inputType="textEmailAddress"
                                 android:layout_height="match_parent"
                                 android:visibility="gone"
                                 android:textSize="16sp" />
@@ -247,7 +251,7 @@
                                 android:layout_height="match_parent"
                                 android:textSize="16sp"
                                 android:layout_marginStart="2dp"
-                                android:text="phone"/>
+                                android:text="City"/>
 
                             <EditText
                                 android:id="@+id/cityEditView"
@@ -304,14 +308,45 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/profileList" />
 
+
+
+            <ImageView
+                android:id="@+id/profileEmptyImageView"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:alpha="0.5"
+                android:visibility="gone"
+                android:layout_marginTop="50dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/pieChart"
+                app:layout_constraintTop_toBottomOf="@id/spamProfileText"
+                app:srcCompat="@drawable/empty_icon" />
+
+            <TextView
+                android:id="@+id/profileEmptytextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:alpha="0.6"
+                android:fontFamily="@font/worksans_light"
+                android:text="No Analysis To Show"
+                android:textSize="16dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/profileEmptyImageView" />
+
             <com.anychart.AnyChartView
                 android:id="@+id/pieChart"
                 android:layout_width="0dp"
                 android:layout_height="300dp"
                 android:layout_marginStart="40dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="40dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="100dp"
+                android:visibility="visible"
                 app:layout_constraintTop_toBottomOf="@id/spamProfileText"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

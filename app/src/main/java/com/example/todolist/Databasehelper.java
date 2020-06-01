@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.strictmode.SqliteObjectLeakedViolation;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
@@ -18,6 +19,9 @@ public class Databasehelper extends SQLiteOpenHelper {
     public static final String TABLE_NAME = "user_info";
     public static final String USER_TABLE_COLUMN_0 = "USER_ID";
     public static final String USER_TABLE_COLUMN_1 = "NICKNAME";
+    public static final String USER_TABLE_COLUMN_2 = "PHONE";
+    public static final String USER_TABLE_COLUMN_3 = "EMAIL";
+    public static final String USER_TABLE_COLUMN_4 = "CITY";
     public static final String COLUMN_0 = "ID";
     public static final String COLUMN_1 = "LABEL";
     public static final String COLUMN_2 = "DATE";
@@ -33,7 +37,7 @@ public class Databasehelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
        //sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, LABEL INTEGER , DATE TEXT, TIME TEXT, NOTES TEXT )");
-       sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + " (USER_ID INTEGER PRIMARY KEY AUTOINCREMENT, NICKNAME TEXT )");
+       sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + " (USER_ID INTEGER PRIMARY KEY AUTOINCREMENT, NICKNAME TEXT , PHONE TEXT , EMAIL TEXT, CITY TEXT )");
     }
 
     @Override
@@ -129,6 +133,60 @@ public class Databasehelper extends SQLiteOpenHelper {
             if(sqLiteDatabase !=null){
                 cursor = sqLiteDatabase.rawQuery(query,null);
             }
+        }
+        return cursor;
+    }
+    public boolean insertPhoneNumber(String phone, String email,String city){
+        SQLiteDatabase database = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(USER_TABLE_COLUMN_2, phone);
+        contentValues.put(USER_TABLE_COLUMN_3, email);
+        contentValues.put(USER_TABLE_COLUMN_4, city);
+        long result = database.insert(TABLE_NAME, null, contentValues);
+        if(result != -1){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public boolean insertEmailName(String phone, String email,String city){
+        SQLiteDatabase database = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(USER_TABLE_COLUMN_2, phone);
+        contentValues.put(USER_TABLE_COLUMN_3, email);
+        contentValues.put(USER_TABLE_COLUMN_4, city);
+        long result = database.insert(TABLE_NAME, null, contentValues);
+        if(result != -1){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public boolean insertCityName(String phone, String email, String city){
+        SQLiteDatabase database = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(USER_TABLE_COLUMN_2, phone);
+        contentValues.put(USER_TABLE_COLUMN_3, email);
+        contentValues.put(USER_TABLE_COLUMN_4, city);
+        long result = database.insert(TABLE_NAME, null, contentValues);
+      /*  long result = database.update(USER_TABLE_NAME, contentValues,"_NICKNAME="+nickname, null);*/
+        if(result != -1){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    public Cursor viewProfileData(){
+        Cursor cursor = null;
+        SQLiteDatabase sqLiteDatabase = getReadableDatabase();
+        String query = "SELECT * FROM "+TABLE_NAME;
+        if(sqLiteDatabase != null){
+            cursor = sqLiteDatabase.rawQuery(query, null);
         }
         return cursor;
     }

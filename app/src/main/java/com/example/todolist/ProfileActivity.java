@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,19 +23,20 @@ import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
 import com.anychart.charts.Pie;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
 
     private AnyChartView pieChart;
-    TextView profileUserName, profileTextView;
-    private EditText profileEditView;
-    private Button profileSaveBtn, profileEditBtn;
+    private TextView profileUserName, profileTextView, emailTextView, cityTextView, profileEmptyTextView;
+    private EditText profileEditView, emailEditView, cityEditView;
+    private Button profileSaveBtn, profileEditBtn, emailSaveBtn, emailEditBtn, cityEditBtn, citySaveBtn;
+    private ImageView profileEmptyImageView;
     SharedPreferences sharedPreferences;
     Databasehelper databasehelper;
-    String nickname, profilePhone;
+    String nickname, profileEmail, profileCity;
+    String profilePhone;
 
     ArrayList<String> array_label_profile;
     ArrayList<Integer> array_activity_profile;
@@ -53,9 +55,9 @@ public class ProfileActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences("Session",MODE_PRIVATE);
         nickname = sharedPreferences.getString("Session_user","");
-        Toast.makeText(getApplicationContext(),"n is "+nickname, Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(),"n is "+nickname, Toast.LENGTH_LONG).show();
 
-        String raw_nickname =nickname.replaceAll("_"," ");
+        final String raw_nickname =nickname.replaceAll("_"," ");
 
         databasehelper = new Databasehelper(this);
         array_label_profile = new ArrayList<>();
@@ -64,6 +66,8 @@ public class ProfileActivity extends AppCompatActivity {
         profileUserName = (TextView)findViewById(R.id.profileUserName);
         profileUserName.setText(raw_nickname);
         pieChart = (AnyChartView)findViewById(R.id.pieChart);
+        profileEmptyTextView = (TextView)findViewById(R.id.profileEmptytextView);
+        profileEmptyImageView = (ImageView) findViewById(R.id.profileEmptyImageView);
         viewLabelData();
 
         viewPieChart();
@@ -77,6 +81,8 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View view) {
                 profileTextView.setVisibility(View.GONE);
                 profileEditView.setVisibility(View.VISIBLE);
+                profileEditView.requestFocus();
+                profileEditView.setFocusableInTouchMode(true);
                 profileSaveBtn.setVisibility(View.VISIBLE);
                 profileEditBtn.setVisibility(View.GONE);
             }
@@ -84,18 +90,139 @@ public class ProfileActivity extends AppCompatActivity {
         profileSaveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                profilePhone = profileEditView.getText().toString();
+
+                profilePhone =  profileEditView.getText().toString();
+                String profileEmailText = emailTextView.getText().toString();
+                String profileCityText = cityTextView.getText().toString();
                 profileEditView.setVisibility(View.GONE);
                 profileTextView.setText(profilePhone);
                 profileSaveBtn.setVisibility(View.GONE);
                 profileTextView.setVisibility(View.VISIBLE);
                 profileEditBtn.setVisibility(View.VISIBLE);
+                boolean insertedphone = databasehelper.insertPhoneNumber(profilePhone,profileEmailText,profileCityText);
+                if(insertedphone){
+                    //Toast.makeText(getApplicationContext(), "Email Inserted", Toast.LENGTH_LONG).show();
+                    profileData();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Email Insertion Failed", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
+        emailTextView = (TextView)findViewById(R.id.emailTextView);
+        emailEditView = (EditText)findViewById(R.id.emailEditView);
+        emailEditBtn = (Button)findViewById(R.id.emailEditBtn);
+        emailSaveBtn = (Button)findViewById(R.id.emailSaveBtn);
+        emailEditBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                emailTextView.setVisibility(View.GONE);
+                emailEditBtn.setVisibility(View.GONE);
+                emailEditView.setVisibility(View.VISIBLE);
+                emailEditView.requestFocus();
+                emailEditView.setFocusableInTouchMode(true);
+                emailSaveBtn.setVisibility(View.VISIBLE);
             }
         });
 
+        emailSaveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String profilePhoneText =  profileTextView.getText().toString();
+                profileEmail = emailEditView.getText().toString();
+                String profileCityText = cityTextView.getText().toString();
+                emailTextView.setText(profileEmail);
+                emailTextView.setVisibility(View.VISIBLE);
+                emailEditView.requestFocus();
+                emailEditView.setFocusableInTouchMode(true);
+                emailEditView.setVisibility(View.GONE);
+                emailSaveBtn.setVisibility(View.GONE);
+                emailEditBtn.setVisibility(View.VISIBLE);
+                boolean insertedEmail = databasehelper.insertEmailName(profilePhoneText,profileEmail,profileCityText);
+                if(insertedEmail){
+                    Toast.makeText(getApplicationContext(), "Email Inserted", Toast.LENGTH_LONG).show();
+                    profileData();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Email Insertion Failed", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        cityTextView = (TextView)findViewById(R.id.cityTextView);
+        cityEditView = (EditText)findViewById(R.id.cityEditView);
+        cityEditBtn = (Button)findViewById(R.id.cityEditBtn);
+        citySaveBtn = (Button)findViewById(R.id.citySaveBtn);
+        cityEditBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cityTextView.setVisibility(View.GONE);
+                cityEditBtn.setVisibility(View.GONE);
+                cityEditView.setVisibility(View.VISIBLE);
+                profileEditView.setFocusableInTouchMode(false);
+                cityEditView.requestFocus();
+                cityEditView.setFocusableInTouchMode(true);
+                citySaveBtn.setVisibility(View.VISIBLE);
+            }
+        });
+        citySaveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String profilePhoneText =  profileTextView.getText().toString();
+                String profileEmailText = emailTextView.getText().toString();
+                profileCity = cityEditView.getText().toString();
+                cityTextView.setText(profileCity);
+                cityTextView.setVisibility(View.VISIBLE);
+                cityEditView.setVisibility(View.GONE);
+                citySaveBtn.setVisibility(View.GONE);
+                cityEditBtn.setVisibility(View.VISIBLE);
+                boolean insertedCity = databasehelper.insertCityName(profilePhoneText,profileEmailText,profileCity);
+                if(insertedCity){
+                    Toast.makeText(getApplicationContext(), "City Name Inserted", Toast.LENGTH_LONG).show();
+                    profileData();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "City Name Insertion Failed", Toast.LENGTH_LONG).show();
+
+                }
+            }
+        });
+
+        profileData();
     }
 
-
+    public void profileData() {
+        Cursor cursor;
+        String phone="";
+        String email="";
+        String city="";
+        cursor = databasehelper.viewProfileData();
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                phone = cursor.getString(2);
+                email = cursor.getString(3);
+                city = cursor.getString(4);
+            }
+            if(phone == null || phone.equals("") || phone.length()<=0){
+                profileTextView.setText("phone");
+            }
+            else{
+                profileTextView.setText(phone);
+            }
+            if(email == null || email.equals("") || email.length()<=0){
+                emailTextView.setText("Email");
+            }
+            else {
+                emailTextView.setText(email);
+            }
+            if(city == null || city.equals("") || city.length()<=0) {
+                cityTextView.setText("City");
+            }
+            else {
+                cityTextView.setText(city);
+            }
+        }
+    }
     public void viewLabelData() {
         Cursor cursor ;
         cursor = databasehelper.userChartInfo(nickname);
@@ -112,6 +239,9 @@ public class ProfileActivity extends AppCompatActivity {
             array_activity_profile.toArray(activity);
             Toast.makeText(ProfileActivity.this, "array : "+labels[0], Toast.LENGTH_LONG).show();
         } catch (Exception e) {
+            profileEmptyImageView.setVisibility(View.VISIBLE);
+            profileEmptyTextView.setVisibility(View.VISIBLE);
+            pieChart.setVisibility(View.GONE);
             Toast.makeText(ProfileActivity.this, "array : "+e, Toast.LENGTH_LONG).show();
         }
     }
