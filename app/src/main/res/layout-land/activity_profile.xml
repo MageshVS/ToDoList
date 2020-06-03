@@ -24,8 +24,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="30dp">
+            android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/mainContainer"
@@ -37,13 +36,27 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_marginTop="40dp"
+                    android:id="@+id/profilePicture"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="20dp"
                     android:src="@drawable/user_icon"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/changeProfilePicture"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Edit Photo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:textAlignment="center"
+                    app:layout_constraintTop_toBottomOf="@id/profilePicture"
+                    android:textColor="#fff"
+                    android:fontFamily="@font/worksans_regular"/>
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -66,14 +79,233 @@
                     android:layout_gravity="center_vertical"
                     android:fontFamily="@font/worksans_regular"
                     android:gravity="center_vertical"
-                    android:padding="10dp"
+                    android:padding="8dp"
                     android:text="USER NAME"
                     android:textAlignment="center"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="20dp" />
+                    android:textSize="18dp" />
 
             </androidx.cardview.widget.CardView>
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/profileList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/mainContainer"
+                app:layout_constraintBottom_toTopOf="@id/spamProfileText">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:weightSum="3"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:orientation="horizontal"
+                        android:weightSum="4"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="40dp"
+                            android:src="@drawable/phone_icon"/>
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2.5">
+
+                            <TextView
+                                android:id="@+id/phoneTextView"
+                                android:gravity="center_vertical"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:textSize="16sp"
+                                android:layout_marginStart="2dp"
+                                android:text="phone"/>
+
+                            <EditText
+                                android:id="@+id/phoneEditView"
+                                android:layout_width="match_parent"
+                                android:gravity="center_vertical"
+                                android:layout_height="match_parent"
+                                android:visibility="gone"
+                                android:inputType="number"
+                                android:maxLength="10"
+                                android:textSize="16sp" />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.5">
+
+                            <Button
+                                android:id="@+id/phoneEditBtn"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginStart="10dp"
+                                android:background="@drawable/button_background"
+                                android:foreground="@drawable/ic_edit_black_24dp"/>
+
+                            <Button
+                                android:id="@+id/phoneSaveBtn"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:visibility="gone"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginStart="10dp"
+                                android:background="@drawable/button_background"
+                                android:foreground="@drawable/button_icon"/>
+
+                        </RelativeLayout>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:orientation="horizontal"
+                        android:weightSum="4"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="40dp"
+                            android:src="@drawable/email_icon"/>
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2.5">
+
+                            <TextView
+                                android:id="@+id/emailTextView"
+                                android:gravity="center_vertical"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:textSize="16sp"
+                                android:inputType="textEmailAddress"
+                                android:layout_marginStart="2dp"
+                                android:text="Email"/>
+
+                            <EditText
+                                android:id="@+id/emailEditView"
+                                android:layout_width="match_parent"
+                                android:gravity="center_vertical"
+                                android:inputType="textEmailAddress"
+                                android:layout_height="match_parent"
+                                android:visibility="gone"
+                                android:textSize="16sp" />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.5">
+
+                            <Button
+                                android:id="@+id/emailEditBtn"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginStart="10dp"
+                                android:background="@drawable/button_background"
+                                android:foreground="@drawable/ic_edit_black_24dp"/>
+
+                            <Button
+                                android:id="@+id/emailSaveBtn"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:visibility="gone"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginStart="10dp"
+                                android:background="@drawable/button_background"
+                                android:foreground="@drawable/button_icon"/>
+
+                        </RelativeLayout>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:orientation="horizontal"
+                        android:weightSum="4"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="40dp"
+                            android:src="@drawable/city_icon"/>
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2.5">
+
+                            <TextView
+                                android:id="@+id/cityTextView"
+                                android:gravity="center_vertical"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:textSize="16sp"
+                                android:layout_marginStart="2dp"
+                                android:text="City"/>
+
+                            <EditText
+                                android:id="@+id/cityEditView"
+                                android:layout_width="match_parent"
+                                android:gravity="center_vertical"
+                                android:layout_height="match_parent"
+                                android:visibility="gone"
+                                android:textSize="16sp" />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.5">
+
+                            <Button
+                                android:id="@+id/cityEditBtn"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginStart="10dp"
+                                android:background="@drawable/button_background"
+                                android:foreground="@drawable/ic_edit_black_24dp"/>
+
+                            <Button
+                                android:id="@+id/citySaveBtn"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:visibility="gone"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginStart="10dp"
+                                android:background="@drawable/button_background"
+                                android:foreground="@drawable/button_icon"/>
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/spamProfileText"
@@ -88,16 +320,47 @@
                 android:textColor="#fff"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/profileDetails" />
+                app:layout_constraintTop_toBottomOf="@id/profileList" />
+
+
+
+            <ImageView
+                android:id="@+id/profileEmptyImageView"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:alpha="0.5"
+                android:visibility="gone"
+                android:layout_marginTop="50dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/pieChart"
+                app:layout_constraintTop_toBottomOf="@id/spamProfileText"
+                app:srcCompat="@drawable/empty_icon" />
+
+            <TextView
+                android:id="@+id/profileEmptytextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:alpha="0.6"
+                android:fontFamily="@font/worksans_light"
+                android:text="No Analysis To Show"
+                android:textSize="16dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/profileEmptyImageView" />
 
             <com.anychart.AnyChartView
                 android:id="@+id/pieChart"
                 android:layout_width="0dp"
                 android:layout_height="300dp"
                 android:layout_marginStart="40dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="40dp"
-                android:layout_marginBottom="60dp"
+                android:layout_marginBottom="100dp"
+                android:visibility="visible"
                 app:layout_constraintTop_toBottomOf="@id/spamProfileText"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
