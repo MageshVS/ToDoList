@@ -80,40 +80,6 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/userName" />
 
-                    <!--<ImageView
-                        android:id="@+id/cloudIcon"
-                        android:layout_width="80dp"
-                        android:layout_height="75dp"
-                        android:src="@drawable/cloud"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/whatsYourPlan"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/temperatureView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="24C"
-                        android:textColor="#fff"
-                        android:textSize="26dp"
-                        android:layout_marginEnd="60dp"
-                        app:layout_constraintEnd_toEndOf="@+id/cloudIcon"
-                        app:layout_constraintStart_toStartOf="@id/cloudIcon"
-                        app:layout_constraintTop_toBottomOf="@id/cloudIcon" />
-
-                    <TextView
-                        android:id="@+id/descView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="cloud"
-                        android:textSize="10dp"
-                        android:fontFamily="@font/worksans_light"
-                        android:textColor="#fff"
-                        android:layout_margin="5dp"
-                        app:layout_constraintStart_toEndOf="@id/temperatureView"
-                        app:layout_constraintTop_toTopOf="@id/temperatureView"
-                        app:layout_constraintBottom_toBottomOf="@id/temperatureView"/>
--->
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

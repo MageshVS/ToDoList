@@ -10,8 +10,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,6 +50,7 @@ public class ProfileActivity extends AppCompatActivity {
     ArrayList<Integer> array_activity_profile;
     String[] labels;
     Integer[] activity;
+    Bitmap bitmap;
 
     public static final int IMAGE_PICK_CODE = 100;
     public static final int PERMISSION_CODE = 101;
@@ -77,6 +82,8 @@ public class ProfileActivity extends AppCompatActivity {
         pieChart = (AnyChartView)findViewById(R.id.pieChart);
         profileEmptyTextView = (TextView)findViewById(R.id.profileEmptytextView);
         profileEmptyImageView = (ImageView) findViewById(R.id.profileEmptyImageView);
+
+        viewProfilePicture();
         viewLabelData();
 
         changeProfilePicture.setOnClickListener(new View.OnClickListener() {
@@ -102,29 +109,23 @@ public class ProfileActivity extends AppCompatActivity {
                 profileEditBtn.setVisibility(View.GONE);
             }
         });
+        profileEditView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if(keyEvent.getAction() == KeyEvent.ACTION_DOWN && i == KeyEvent.KEYCODE_ENTER){
+                    profilePhoneFunction();
+                    return true;
+                }
+                return false;
+            }
+        });
         profileSaveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                profilePhone =  profileEditView.getText().toString();
-                String profileEmailText = emailTextView.getText().toString();
-                String profileCityText = cityTextView.getText().toString();
-                profileEditView.setVisibility(View.GONE);
-                profileTextView.setText(profilePhone);
-                profileSaveBtn.setVisibility(View.GONE);
-                profileTextView.setVisibility(View.VISIBLE);
-                profileEditBtn.setVisibility(View.VISIBLE);
-                boolean insertedphone = databasehelper.insertPhoneNumber(profilePhone,profileEmailText,profileCityText);
-                if(insertedphone){
-                    //Toast.makeText(getApplicationContext(), "Email Inserted", Toast.LENGTH_LONG).show();
-                    profileData();
-                }
-                else{
-                    Toast.makeText(getApplicationContext(), "Email Insertion Failed", Toast.LENGTH_LONG).show();
-                }
-
+                profilePhoneFunction();
             }
         });
+
         emailTextView = (TextView)findViewById(R.id.emailTextView);
         emailEditView = (EditText)findViewById(R.id.emailEditView);
         emailEditBtn = (Button)findViewById(R.id.emailEditBtn);
@@ -141,27 +142,20 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        emailEditView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if(keyEvent.getAction() == KeyEvent.ACTION_DOWN && i == KeyEvent.KEYCODE_ENTER){
+                    profileEmailFunction();
+                    return true;
+                }
+                return false;
+            }
+        });
         emailSaveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String profilePhoneText =  profileTextView.getText().toString();
-                profileEmail = emailEditView.getText().toString();
-                String profileCityText = cityTextView.getText().toString();
-                emailTextView.setText(profileEmail);
-                emailTextView.setVisibility(View.VISIBLE);
-                emailEditView.requestFocus();
-                emailEditView.setFocusableInTouchMode(true);
-                emailEditView.setVisibility(View.GONE);
-                emailSaveBtn.setVisibility(View.GONE);
-                emailEditBtn.setVisibility(View.VISIBLE);
-                boolean insertedEmail = databasehelper.insertEmailName(profilePhoneText,profileEmail,profileCityText);
-                if(insertedEmail){
-                    Toast.makeText(getApplicationContext(), "Email Inserted", Toast.LENGTH_LONG).show();
-                    profileData();
-                }
-                else{
-                    Toast.makeText(getApplicationContext(), "Email Insertion Failed", Toast.LENGTH_LONG).show();
-                }
+                profileEmailFunction();
             }
         });
         cityTextView = (TextView)findViewById(R.id.cityTextView);
@@ -180,31 +174,101 @@ public class ProfileActivity extends AppCompatActivity {
                 citySaveBtn.setVisibility(View.VISIBLE);
             }
         });
+        cityEditView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if(keyEvent.getAction() == KeyEvent.ACTION_DOWN && i == KeyEvent.KEYCODE_ENTER){
+                    profileCityFunction();
+                    return true;
+                }
+                return false;
+            }
+        });
         citySaveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String profilePhoneText =  profileTextView.getText().toString();
-                String profileEmailText = emailTextView.getText().toString();
-                profileCity = cityEditView.getText().toString();
-                cityTextView.setText(profileCity);
-                cityTextView.setVisibility(View.VISIBLE);
-                cityEditView.setVisibility(View.GONE);
-                citySaveBtn.setVisibility(View.GONE);
-                cityEditBtn.setVisibility(View.VISIBLE);
-                boolean insertedCity = databasehelper.insertCityName(profilePhoneText,profileEmailText,profileCity);
-                if(insertedCity){
-                    Toast.makeText(getApplicationContext(), "City Name Inserted", Toast.LENGTH_LONG).show();
-                    profileData();
-                }
-                else{
-                    Toast.makeText(getApplicationContext(), "City Name Insertion Failed", Toast.LENGTH_LONG).show();
-
-                }
+                profileCityFunction();
             }
         });
 
         profileData();
     }
+
+    private void profilePhoneFunction(){
+        profilePhone =  profileEditView.getText().toString();
+        String profileEmailText = emailTextView.getText().toString();
+        String profileCityText = cityTextView.getText().toString();
+        profileEditView.setVisibility(View.GONE);
+        profileTextView.setText(profilePhone);
+        profileSaveBtn.setVisibility(View.GONE);
+        profileTextView.setVisibility(View.VISIBLE);
+        profileEditBtn.setVisibility(View.VISIBLE);
+        boolean insertedphone = databasehelper.insertPhoneNumber(profilePhone,profileEmailText,profileCityText);
+        if(insertedphone){
+            //Toast.makeText(getApplicationContext(), "Email Inserted", Toast.LENGTH_LONG).show();
+            profileData();
+        }
+        else{
+            Toast.makeText(getApplicationContext(), "Email Insertion Failed", Toast.LENGTH_LONG).show();
+        }
+    }
+    private void profileEmailFunction(){
+        String profilePhoneText =  profileTextView.getText().toString();
+        profileEmail = emailEditView.getText().toString();
+        String profileCityText = cityTextView.getText().toString();
+        emailTextView.setText(profileEmail);
+        emailTextView.setVisibility(View.VISIBLE);
+        emailEditView.requestFocus();
+        emailEditView.setFocusableInTouchMode(true);
+        emailEditView.setVisibility(View.GONE);
+        emailSaveBtn.setVisibility(View.GONE);
+        emailEditBtn.setVisibility(View.VISIBLE);
+        boolean insertedEmail = databasehelper.insertEmailName(profilePhoneText,profileEmail,profileCityText);
+        if(insertedEmail){
+            Toast.makeText(getApplicationContext(), "Email Inserted", Toast.LENGTH_LONG).show();
+            profileData();
+        }
+        else{
+            Toast.makeText(getApplicationContext(), "Email Insertion Failed", Toast.LENGTH_LONG).show();
+        }
+    }
+    private void profileCityFunction(){
+        String profilePhoneText =  profileTextView.getText().toString();
+        String profileEmailText = emailTextView.getText().toString();
+        profileCity = cityEditView.getText().toString();
+        cityTextView.setText(profileCity);
+        cityTextView.setVisibility(View.VISIBLE);
+        cityEditView.setVisibility(View.GONE);
+        citySaveBtn.setVisibility(View.GONE);
+        cityEditBtn.setVisibility(View.VISIBLE);
+        boolean insertedCity = databasehelper.insertCityName(profilePhoneText,profileEmailText,profileCity);
+        if(insertedCity){
+            Toast.makeText(getApplicationContext(), "City Name Inserted", Toast.LENGTH_LONG).show();
+            profileData();
+        }
+        else{
+            Toast.makeText(getApplicationContext(), "City Name Insertion Failed", Toast.LENGTH_LONG).show();
+
+        }
+    }
+    private void viewProfilePicture() {
+        Cursor cursor;
+        byte[] imageData = {};
+        cursor = databasehelper.retriveProfileImages(nickname);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                imageData = cursor.getBlob(0);
+            }
+            if (imageData != null && imageData.length!=0) {
+                Bitmap image = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+                profilePicture.setImageBitmap(image);
+            }else{
+                profileEmptyImageView.setImageResource(R.drawable.user_icon);
+            }
+        }
+
+    }
+
 
     private void changeProfilePicture() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
@@ -245,7 +309,16 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE){
             profilePicture.setImageURI(data.getData());
+            profilePicture.invalidate();
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) profilePicture.getDrawable();
+            bitmap = bitmapDrawable.getBitmap();
+            saveProfilePicture();
+            viewProfilePicture();
         }
+    }
+
+    private void saveProfilePicture() {
+        databasehelper.saveProfileImage(nickname, bitmap);
     }
 
     public void profileData() {
