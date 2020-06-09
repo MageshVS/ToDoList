@@ -35,12 +35,16 @@ For Contact - vsmagesh12@gmail.com
 
 Chart view - https://github.com/AnyChart/AnyChart-Android
 
-<p align="center">
+<p>
 <img src="https://github.com/MageshVS/ToDoList/blob/master/app/src/main/res/drawable/IMG_20200610_001940.jpg" width="300" height="500">
+</p>
+<p>
 <img src="https://github.com/MageshVS/ToDoList/blob/master/app/src/main/res/drawable/IMG_20200610_002038.jpg" width="300" height="500">
 </p>
-<p align="center">
+<p style="margin-top:20px;">
 <img src="https://github.com/MageshVS/ToDoList/blob/master/app/src/main/res/drawable/Screenshot_2020-06-10-00-49-42-53_a9209a841710ea1cebfcec0facacae9b.jpg" width="300" height="500">
+</p>
+<p>
 <img src="https://github.com/MageshVS/ToDoList/blob/master/app/src/main/res/drawable/IMG_20200610_002005.jpg" width="300" height="500">
 </p>
 
