@@ -263,7 +263,7 @@ public class ProfileActivity extends AppCompatActivity {
                 Bitmap image = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
                 profilePicture.setImageBitmap(image);
             }else{
-                profileEmptyImageView.setImageResource(R.drawable.user_icon);
+                profilePicture.setImageResource(R.drawable.user_icon);
             }
         }
 
