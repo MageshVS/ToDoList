@@ -1,3 +1,5 @@
+<img src="https://github.com/MageshVS/ToDoList/blob/master/app/src/main/res/drawable/IMG_20200610_021229.jpg" width="1000" height="300">
+
 # ToDoList
 13/05/2020.
 
@@ -35,9 +37,8 @@ For Contact - vsmagesh12@gmail.com
 
 Chart view - https://github.com/AnyChart/AnyChart-Android
 
-<p>
-<img src="https://github.com/MageshVS/ToDoList/blob/master/app/src/main/res/drawable/IMG_20200610_001940.jpg" width="300" height="500">
-</p>
+# Screenshots.
+
 <p>
 <img src="https://github.com/MageshVS/ToDoList/blob/master/app/src/main/res/drawable/IMG_20200610_002038.jpg" width="300" height="500">
 </p>
