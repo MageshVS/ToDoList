@@ -41,12 +41,13 @@ Chart view - https://github.com/AnyChart/AnyChart-Android
 
 <div align="center">
 <img src="https://github.com/MageshVS/ToDoList/blob/master/app/src/main/res/drawable/IMG_20200610_002038.jpg" width="300" height="500" >
+  <h5>Home Page</h5>
 </div>
-<p>
+<div align="center">
 <img src="https://github.com/MageshVS/ToDoList/blob/master/app/src/main/res/drawable/Screenshot_2020-06-10-00-49-42-53_a9209a841710ea1cebfcec0facacae9b.jpg" width="300" height="500">
-</p>
-<p>
+</div>
+<div align="center">
 <img src="https://github.com/MageshVS/ToDoList/blob/master/app/src/main/res/drawable/IMG_20200610_002005.jpg" width="300" height="500">
-</p>
+</div>
 
 
