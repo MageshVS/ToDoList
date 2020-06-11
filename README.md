@@ -1,4 +1,4 @@
-<img src="https://github.com/MageshVS/ToDoList/blob/master/app/src/main/res/drawable/IMG_20200610_021229.jpg" width="1000" height="300">
+<img src="https://github.com/MageshVS/ToDoList/blob/master/app/src/main/res/drawable/splash_screen_landscape.jpg" width="1000" height="300">
 
 # ToDoList
 13/05/2020.
@@ -40,15 +40,15 @@ Chart view - https://github.com/AnyChart/AnyChart-Android
 # Screenshots.
 
 <div align="center">
-<img src="https://github.com/MageshVS/ToDoList/blob/master/app/src/main/res/drawable/IMG_20200610_002038.jpg" width="300" height="500" >
+<img src="https://github.com/MageshVS/ToDoList/blob/master/app/src/main/res/drawable/home_page.jpg" width="300" height="500" >
 <h3>Home Page</h3>
 </div>
 <div align="center">
-<img src="https://github.com/MageshVS/ToDoList/blob/master/app/src/main/res/drawable/Screenshot_2020-06-10-00-49-42-53_a9209a841710ea1cebfcec0facacae9b.jpg" width="300" height="500">
+<img src="https://github.com/MageshVS/ToDoList/blob/master/app/src/main/res/drawable/addnote_page.jpg" width="300" height="500">
 <h3>Adding Notes</h3>
 </div>
 <div align="center">
-<img src="https://github.com/MageshVS/ToDoList/blob/master/app/src/main/res/drawable/IMG_20200610_002005.jpg" width="300" height="500">
+<img src="https://github.com/MageshVS/ToDoList/blob/master/app/src/main/res/drawable/profile_page.jpg" width="300" height="500">
 <h3>Profile Page</h3>
 </div>
 
