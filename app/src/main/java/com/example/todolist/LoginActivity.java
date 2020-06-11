@@ -31,9 +31,11 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                //Replacing spaces with underscore
+                //empty spaces causes errors during executing SQLite query
                 nickname = nicknameView.getText().toString().replaceAll("\\s+","_");
 
+                //checking if user enters a valid name
                 if(nickname.matches("")){
                     warningMessage.setText("Enter a Valid Name");
                     warningMessage.setVisibility(View.VISIBLE);
@@ -41,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
                 else{
                     //Toast.makeText(getApplicationContext(),nickname,Toast.LENGTH_LONG).show();
                     warningMessage.setVisibility(View.GONE);
+                    //inserting the user name in user table
                     Databasehelper databasehelper = new Databasehelper(LoginActivity.this);
                     boolean result = databasehelper.insertUser(nickname);
                     if(result == true){
@@ -49,7 +52,6 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     else {
                         //Toast.makeText(getApplicationContext(), "UPDATE FAILED", Toast.LENGTH_LONG).show();
-
                     }
                 }
             }
@@ -60,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
         checkUser();
     }
+    //when user opens for second time this will check if the user is logged in
     public void checkUser(){
         SessionManagement sessionManagement = new SessionManagement(LoginActivity.this);
         String isLoggedIn = sessionManagement.getSession();
@@ -68,14 +71,17 @@ public class LoginActivity extends AppCompatActivity {
 
         }
         else {
+            //if the user is already logged in. this will automatically direct him to Home page
             moveToMainActivity();
         }
     }
     public void login(View view){
         UserClass user = new UserClass(nickname);
+        //saving the user name as session variable
         SessionManagement sessionManagement = new SessionManagement(LoginActivity.this);
         sessionManagement.saveSession(user);
 
+        //creating a separate table for user
         Databasehelper databasehelper = new Databasehelper(LoginActivity.this);
         databasehelper.CreateUserTable(nickname);
         moveToMainActivity();
@@ -85,6 +91,7 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+        //starting a progress bar to notify the user that process is running in background
         progressDialog = new ProgressDialog(LoginActivity.this);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Loading");
@@ -95,6 +102,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        //stopping the progress bar when the process finished
         if(progressDialog != null && progressDialog.isShowing()){
             progressDialog.dismiss();
         }

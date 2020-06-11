@@ -48,7 +48,6 @@ public class Databasehelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        //sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, LABEL INTEGER , DATE TEXT, TIME TEXT, NOTES TEXT )");
         sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + " (USER_ID INTEGER PRIMARY KEY AUTOINCREMENT, NICKNAME TEXT , PHONE TEXT , EMAIL TEXT, CITY TEXT )");
     }
 

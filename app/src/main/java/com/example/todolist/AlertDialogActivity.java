@@ -19,6 +19,7 @@ public class AlertDialogActivity extends AppCompatDialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         androidx.appcompat.app.AlertDialog.Builder builder = new  androidx.appcompat.app.AlertDialog.Builder(getActivity());
+        //inflating our custom AlertDialog XML file
         LayoutInflater layoutInflater = getActivity().getLayoutInflater();
         View view = layoutInflater.inflate(R.layout.alertdialog_label, null);
         builder.setView(view).setTitle("Add a Custom Label").setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -26,6 +27,8 @@ public class AlertDialogActivity extends AppCompatDialogFragment {
             public void onClick(DialogInterface dialogInterface, int i) {
 
             }
+        // when the user clicks the "OK" button
+        // this will fetch the label name from the editText
         }).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -48,6 +51,7 @@ public class AlertDialogActivity extends AppCompatDialogFragment {
     }
 
     public interface AlertDialogInterface{
+        //sending the label value to applyText method
         void applyTexts(String label);
     }
 }

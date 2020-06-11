@@ -6,12 +6,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -40,6 +43,7 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
     Button update, deleteOneRow;
     String label, format, nickname;
     ArrayList<String> labelArray;
+    private int code;
     private  int hour_for_alarm ,minute_for_alarm, day_for_alarm, month_for_alarm, year_for_alarm;
     String update_id, update_label, update_date, update_time, update_notes;
     String a_update_label;
@@ -55,16 +59,21 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update);
 
+        //setting the toolbar
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary, null));
         toolbar.setTitleTextAppearance(this, R.style.righteous_regular);
         setSupportActionBar(toolbar);
 
+        //getting the sharedPreference key-value(session variable)
         sharedPreferences = getSharedPreferences("Session",MODE_PRIVATE);
         nickname = sharedPreferences.getString("Session_user","");
         //Toast.makeText(getApplicationContext(),"n is "+nickname, Toast.LENGTH_LONG).show();
 
         notificationManager = NotificationManagerCompat.from(this);
+
+        //Instance of databaseHelper class
+        databasehelper = new Databasehelper(UpdateActivity.this);
 
         labelUpdateView = (TextView)findViewById(R.id.update_label);
         spinner = (Spinner) findViewById(R.id.update_labelSpinner);
@@ -73,6 +82,7 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
         notesUpdateView = (EditText) findViewById(R.id.update_notesConatiner);
         update = (Button) findViewById(R.id.update_buttoncls);
 
+        //Adding values for label(dropdown list box)
         labelArray = new ArrayList<String>();
         labelArray.add("Select a Label");
         labelArray.add("Work");
@@ -81,10 +91,14 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
         labelArray.add("Custom");
         getAndSetIntentData();
 
+        //setting the array in a adapter
         final ArrayAdapter<String> labelAdapter = new ArrayAdapter<>(UpdateActivity.this,
                 android.R.layout.simple_list_item_1,labelArray);
         labelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //getting the existing label value
         final int a = labelAdapter.getPosition(a_update_label);
+        update_label = (String) spinner.getItemAtPosition(a);
+        //setting that value into the label dropdown lost box
         spinner.post(new Runnable() {
             @Override
             public void run() {
@@ -93,18 +107,21 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
         });
         spinner.setAdapter(labelAdapter);
 
-
+        //finding the value which the user clicked in dropdown box
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i!=0 && i<4) {
+                    //if the user clicks the custom label this will open a dialog box
                    // Toast.makeText(getApplicationContext(), (String)adapterView.getItemAtPosition(i), Toast.LENGTH_SHORT).show();
                     update_label = (String) adapterView.getItemAtPosition(i);
                 }
                 else if(i == 4){
+                    //if the user clicks the custom label this will open a dialog box
                     openDialog();
                 }
                 else{
+                    //if user either selects a default value or doesn't select any value
                     update_label = "No Label";
                 }
             }
@@ -114,6 +131,7 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
             }
         });
 
+        //getting the current system date
         Calendar calendar = Calendar.getInstance();
         final int year = calendar.get(Calendar.YEAR);
         final int month = calendar.get(Calendar.MONTH);
@@ -123,6 +141,7 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
         month_for_alarm = month;
         day_for_alarm = date;
 
+        //Creating a datePickerDialog to allow the user select the time they wanted
         dateUpdateView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -135,6 +154,7 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
             }
         });
 
+        //changing the months from number format to text format for better user experience
         setListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int date) {
@@ -188,6 +208,7 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
             }
         };
 
+        //Creating a timePickerDialog to allow the user select the time they wanted
         timeUpdateView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -202,6 +223,7 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
 
             }
         });
+        //Finding whether the time entered is A.M or P.M
         timeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
@@ -227,10 +249,8 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
                     String time = hour + " : " + minute + " " + format;
                     timeUpdateView.setText(time);
                 }
-
             }
         };
-
 
         update.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -241,10 +261,13 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
                 update_notes = notesUpdateView.getText().toString();
                 databasehelper.updateData(nickname,update_id,update_label,update_date,update_time,update_notes);
                 sendOnChannel1();
+                setAlarm(view);
                 Intent updateIntent = new Intent(UpdateActivity.this, MainActivity.class);
                 startActivity(updateIntent);
             }
         });
+        //if the user clicks delete button
+        //this will delete the current note data
         deleteOneRow = (Button)findViewById(R.id.recyclerDeletebtn);
         deleteOneRow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -256,6 +279,7 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
         });
     }
 
+    //when the user clicks the save button this method will notify with a message "Updated Successfully"
     public void sendOnChannel1(){
         Intent ActivityIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, ActivityIntent, 0);
@@ -273,14 +297,50 @@ public class UpdateActivity extends AppCompatActivity implements AlertDialogActi
         notificationManager.notify(1, notification);
 
     }
+    public void setAlarm(View v){
+        Cursor cursor = databasehelper.viewAllData(nickname);
+        if(cursor.getCount() != 0){
+            //adding the alarm for the last created note.
+            cursor.moveToLast();
+            code = cursor.getInt(0);
+        }
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlarmReciver.class);
+        //to achieve multiple alarm each pending intent should have unique number
+        //here "code" is used unique number
+        intent.putExtra("Code", code);
+        intent.putExtra("Title", update_label);
+        intent.putExtra("Notes", notesUpdateView.getText().toString());
+        //startService(intent);
+        PendingIntent pendingIntentAlarm = PendingIntent.getBroadcast(getApplicationContext(),code, intent, 0);
 
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(System.currentTimeMillis());
+        c.clear();
+        //passing te user entered date and time
+        c.set(Calendar.DAY_OF_MONTH, day_for_alarm);
+        c.set(Calendar.MONTH, month_for_alarm);
+        c.set(Calendar.YEAR, year_for_alarm);
+        c.set(Calendar.HOUR_OF_DAY, hour_for_alarm);
+        c.set(Calendar.MINUTE, minute_for_alarm);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+
+        try {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntentAlarm);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //when a user clicks any recycler view in MainActivity
+    //the entire data of that particular view is send and received here
     public void getAndSetIntentData() {
         if (getIntent().hasExtra("ID") && getIntent().hasExtra("LABEL")
                 && getIntent().hasExtra("DATE") && getIntent().hasExtra("TIME") && getIntent().hasExtra("NOTES")) {
 
             update_id = getIntent().getStringExtra("ID");
             a_update_label = getIntent().getStringExtra("LABEL");
-            //Toast.makeText(getApplicationContext(), "a_update"+a_update_label,Toast.LENGTH_LONG).show();
             update_date = getIntent().getStringExtra("DATE");
             update_time = getIntent().getStringExtra("TIME");
             update_notes = getIntent().getStringExtra("NOTES");

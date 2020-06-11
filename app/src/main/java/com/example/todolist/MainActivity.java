@@ -57,86 +57,27 @@ public class MainActivity extends AppCompatActivity {
     public FloatingActionButton floatingActionButton;
     private String nickname;
     private ProgressDialog progressDialog;
-    class Weather extends AsyncTask<String, Void, String>{
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(MainActivity.this);
-            progressDialog.setIndeterminate(true);
-            progressDialog.setMessage("Loading..");
-            progressDialog.show();
-
-        }
-
-        @Override
-        protected String doInBackground(String... address) {
-            try {
-                URL url = new URL(address[0]);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
-
-                InputStream inputStream = connection.getInputStream();
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-
-                int data = inputStreamReader.read();
-                String content = "";
-                char ch;
-                while (data != -1){
-                    ch = (char)data;
-                    content = content + ch;
-                    data = inputStreamReader.read();
-                }
-                return content;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            progressDialog.dismiss();
-        }
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            finish();
-            startActivity(getIntent());
-        }
-    }
-
-  /*  @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        progressDialog.dismiss();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        progressDialog.dismiss();
-    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //setting toolbar
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary, null));
         toolbar.setTitleTextAppearance(this, R.style.righteous_regular);
         setSupportActionBar(toolbar);
 
-
+        //getting the sharedPreference key-value(session variable)
         sharedPreferences = getSharedPreferences("Session",MODE_PRIVATE);
         nickname = sharedPreferences.getString("Session_user","");
         //Toast.makeText(getApplicationContext(),"n is "+nickname, Toast.LENGTH_LONG).show();
 
+        //Instance of databaseHelper class
         databasehelper = new Databasehelper(this);
+
         emptyImageView = (ImageView)findViewById(R.id.emptyImageView);
         emptyTextView = (TextView)findViewById(R.id.emptytextView);
         username = (TextView)findViewById(R.id.userName);
@@ -145,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         temperatureText = (TextView)findViewById(R.id.temperatureView);
         descText = (TextView)findViewById(R.id.descView);
 
-
+        //Replacing "_"(underscore) with space to get back the original user name
         String raw_nickname =nickname.replaceAll("_"," ");
         username.setText(raw_nickname);
 
@@ -157,10 +98,10 @@ public class MainActivity extends AppCompatActivity {
         String dateFormat = dateFormatData.format(new Date());
         String timeFormat = timeFormatData.format(new Date());
 
-
         dateText.setText(dateFormat);
         timeText.setText(timeFormat);
 
+        //defining a floating button for adding notes
         floatingActionButton = (FloatingActionButton)findViewById(R.id.floatbtn);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,8 +118,6 @@ public class MainActivity extends AppCompatActivity {
         array_time = new ArrayList<>();
         array_notes = new ArrayList<>();
 
-
-
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         DataAdapterClass dataAdapterClass = new DataAdapterClass(MainActivity.this, this,
                 array_id, array_label, array_date, array_time, array_notes);
@@ -186,46 +125,18 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
         viewData();
-        //updateWeatherInfo();
-
     }
 
-
-    public void updateWeatherInfo() {
-        String content;
-        MainActivity.Weather weather = new MainActivity.Weather();
-        try {
-            content = weather.execute("https://api.openweathermap.org/data/2.5/weather?q=Chennai&appid=ec69d3539222343ef37b0af8e6a67423").get();
-            Log.i("content", content);
-
-            JSONObject jsonObject = new JSONObject(content);
-            String weatherData = jsonObject.getString("weather");
-            String mainTemperature = jsonObject.getString("main");
-
-            JSONArray jsonArray = new JSONArray(weatherData);
-
-            String main = "";
-            String desc = "";
-
-            for(int i = 0; i<jsonArray.length(); i++){
-                JSONObject weatherPart = jsonArray.getJSONObject(i);
-                main = weatherPart.getString("main");
-                desc = weatherPart.getString("description");
-            }
-            JSONObject mainTemp = new JSONObject(mainTemperature);
-            String tempreature = mainTemp.getString("temp");
-            String temp = tempreature.substring(0,2)+"\u00B0"+"C";
-          //  Toast.makeText(MainActivity.this, "main "+main+" desc "+desc+" temp "+tempreature, Toast.LENGTH_LONG).show();
-
-            temperatureText.setText(temp);
-            descText.setText(desc);
-        } catch (Exception e) {
-            e.printStackTrace();
-           // Toast.makeText(getApplicationContext(), "weatherApi"+e, Toast.LENGTH_LONG).show();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            finish();
+            startActivity(getIntent());
         }
-
     }
 
+    //fetching the data from the database and adding the data to arrayList
     public void viewData() {
         Cursor cursor ;
         cursor = databasehelper.viewAllData(nickname);

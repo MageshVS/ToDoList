@@ -22,12 +22,13 @@ public class WelcomeActivity extends AppCompatActivity {
 
     Animation topAnim, bottomAnim;
     ImageView imageView;
-    TextView logotext, slogan, temperatureText, descText;
-    ProgressDialog progressDialog;
+    TextView logotext, slogan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //for enabling full screen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_welcome);
 
@@ -38,14 +39,12 @@ public class WelcomeActivity extends AppCompatActivity {
         logotext = (TextView)findViewById(R.id.logotext);
         slogan = (TextView)findViewById(R.id.slogan);
 
-
+        //setting animations
         imageView.setAnimation(topAnim);
         logotext.setAnimation(bottomAnim);
         slogan.setAnimation(bottomAnim);
 
-        temperatureText = (TextView)findViewById(R.id.temperatureView);
-        descText = (TextView)findViewById(R.id.descView);
-
+        //Splash Screen for duration 1.5 seconds
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -54,7 +53,5 @@ public class WelcomeActivity extends AppCompatActivity {
                 finish();
             }
         }, 1500);
-
     }
-
 }

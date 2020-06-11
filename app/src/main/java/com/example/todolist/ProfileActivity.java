@@ -60,15 +60,18 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        //setting toolbar
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary, null));
         toolbar.setTitleTextAppearance(this, R.style.righteous_regular);
         setSupportActionBar(toolbar);
 
+        //getting the sharedPreference key-value(session variable)
         sharedPreferences = getSharedPreferences("Session",MODE_PRIVATE);
         nickname = sharedPreferences.getString("Session_user","");
         //Toast.makeText(getApplicationContext(),"n is "+nickname, Toast.LENGTH_LONG).show();
 
+        //Replacing "_"(underscore) with space to get back the original user name
         final String raw_nickname =nickname.replaceAll("_"," ");
 
         databasehelper = new Databasehelper(this);
@@ -194,6 +197,7 @@ public class ProfileActivity extends AppCompatActivity {
         profileData();
     }
 
+
     private void profilePhoneFunction(){
         profilePhone =  profileEditView.getText().toString();
         String profileEmailText = emailTextView.getText().toString();
@@ -270,6 +274,8 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
+    //checking if the user's Android version is greater than or equal to MARSHMALLOW
+    //if yes then this will ask user for storage permission
     private void changeProfilePicture() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
@@ -288,9 +294,9 @@ public class ProfileActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/+");
         startActivityForResult(intent, IMAGE_PICK_CODE);
-
     }
 
+    //requesting to user for permission
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){

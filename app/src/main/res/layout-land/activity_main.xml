@@ -42,7 +42,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/abcde">
+                    android:background="@drawable/cardview_background">
 
                     <TextView
                         android:id="@+id/cardViewText1"

@@ -8,21 +8,24 @@ public class SessionManagement {
     SharedPreferences.Editor editor;
     private String SHARED_PRE_NAME = "Session";
     private String SHARED_KEY = "Session_user";
-    private  String nickname;
+    private String nickname;
 
     public SessionManagement(Context context) {
         sharedPreferences = context.getSharedPreferences(SHARED_PRE_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
     }
-    public void saveSession(UserClass user){
+
+    public void saveSession(UserClass user) {
         nickname = user.getNickname();
         editor.putString(SHARED_KEY, nickname).commit();
 
     }
-    public String getSession(){
+
+    public String getSession() {
         return sharedPreferences.getString(SHARED_KEY, "logout");
     }
-    public void removeSession(){
+
+    public void removeSession() {
         editor.putString(SHARED_KEY, "logout").commit();
     }
 }

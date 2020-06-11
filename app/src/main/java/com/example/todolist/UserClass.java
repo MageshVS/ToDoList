@@ -3,6 +3,7 @@ package com.example.todolist;
 public class UserClass {
     private String nickname;
 
+    //getter and setter method
     public UserClass(String nickname) {
         this.nickname = nickname;
     }

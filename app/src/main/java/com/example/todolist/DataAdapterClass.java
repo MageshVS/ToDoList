@@ -40,6 +40,7 @@ public class DataAdapterClass extends RecyclerView.Adapter<DataAdapterClass.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        //inflating our custom recyclerView layout
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View view = layoutInflater.inflate(R.layout.recycler_template, parent, false);
         return new ViewHolder(view);
@@ -55,6 +56,8 @@ public class DataAdapterClass extends RecyclerView.Adapter<DataAdapterClass.View
         holder.mainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //when user clicks on any one of the recyclerView
+                //this will start an intent to updateActivity with entire data of the selected View
                 Intent intent = new Intent(context, UpdateActivity.class);
                 intent.putExtra("ID",String.valueOf(array_id.get(position)));
                 intent.putExtra("LABEL",String.valueOf(array_label.get(position)));
@@ -77,12 +80,13 @@ public class DataAdapterClass extends RecyclerView.Adapter<DataAdapterClass.View
         ConstraintLayout mainLayout;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
             labelView = itemView.findViewById(R.id.re_label);
             dateView = itemView.findViewById(R.id.re_date);
             timeView = itemView.findViewById(R.id.re_time);
             noteView = itemView.findViewById(R.id.re_note);
             mainLayout = itemView.findViewById(R.id.mainLayout);
+
+            //setting animation for the items in recyclerView
             animation = AnimationUtils.loadAnimation(context,R.anim.translate_anim);
             mainLayout.setAnimation(animation);
         }

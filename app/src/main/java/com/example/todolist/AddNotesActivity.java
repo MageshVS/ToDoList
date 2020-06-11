@@ -18,7 +18,6 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,7 +45,7 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
 
     private  int hour_for_alarm ,minute_for_alarm, day_for_alarm, month_for_alarm, year_for_alarm;
 
-    private Spinner labelSpinner, dateSpinner, timeSpinner;
+    private Spinner labelSpinner;
     private ToggleButton remainderToggle;
     private EditText notesView;
     public ArrayList<String> labelArray;
@@ -66,21 +65,26 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_notes);
 
+        //setting the toolbar
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorPrimary, null));
         toolbar.setTitleTextAppearance(this, R.style.righteous_regular);
         setSupportActionBar(toolbar);
 
+        //getting the sharedPreference key-value(session variable)
         sharedPreferences = getSharedPreferences("Session",MODE_PRIVATE);
         nickname = sharedPreferences.getString("Session_user","");
         //Toast.makeText(getApplicationContext(),"n is "+nickname, Toast.LENGTH_LONG).show();
 
+        //Instance of databaseHelper class
         databasehelper = new Databasehelper(this);
+
         labelSpinner = (Spinner) findViewById(R.id.labelSpinner);
         remainderToggle = (ToggleButton)findViewById(R.id.toggleButton);
 
         notificationManager = NotificationManagerCompat.from(this);
 
+        //Adding values for label(dropdown list box)
         labelArray = new ArrayList<String>();
         labelArray.add("Select a Label");
         labelArray.add("Work");
@@ -88,12 +92,13 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
         labelArray.add("Shopping");
         labelArray.add("Custom");
 
+        //setting the array in a adapter
         final ArrayAdapter<String> labelAdapter = new ArrayAdapter<>(AddNotesActivity.this,
                 android.R.layout.simple_list_item_1, labelArray);
         labelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         labelSpinner.setAdapter(labelAdapter);
 
-
+        //finding the value which the user clicked in dropdown box
         labelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -102,9 +107,11 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
                      label = (String) adapterView.getItemAtPosition(i);
                 }
                 else if(i == labelArray.size()-1){
+                    //if the user clicks the custom label this will open a dialog box
                     openDialog();
                 }
                 else{
+                    //if user either selects a default value or doesn't select any value
                     label = "No Label";
                 }
             }
@@ -118,7 +125,7 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
         timeView = (TextView) findViewById(R.id.TimeView);
         notesView = (EditText)findViewById(R.id.notesConatiner);
 
-
+        //getting the current system date
         Calendar calendar = Calendar.getInstance();
         final int year = calendar.get(Calendar.YEAR);
         final int month = calendar.get(Calendar.MONTH);
@@ -131,6 +138,7 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
         String currentDate = DateFormat.getDateInstance(DateFormat.MEDIUM).format(calendar.getTime());
         dateView.setText(currentDate);
 
+        //Creating a datePickerDialog to allow the user select the time they wanted
         dateView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,11 +146,16 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
                         R.style.DatePickerDialogTheme,
                         setListener, year, month, date);
 
-                datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-                datePickerDialog.show();
+                try {
+                    datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+                    datePickerDialog.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
+        //changing the months from number format to text format for better user experience
         setListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int date) {
@@ -196,6 +209,7 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
             }
          };
 
+        //Creating a timePickerDialog to allow the user select the time they wanted
         timeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -205,18 +219,22 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
 
                 TimePickerDialog dialog = new TimePickerDialog(AddNotesActivity.this,
                         R.style.DatePickerDialogTheme, timeSetListener, hour, minute, false);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-                dialog.show();
+                try {
+                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+                    dialog.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
             }
         });
+        //Finding whether the time entered is A.M or P.M
         timeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
                 hour_for_alarm = hour;
                 minute_for_alarm = minute;
                 if (hour == 0) {
-
                     hour += 12;
                     format = "AM";
                 } else if (hour == 12) {
@@ -253,7 +271,8 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
        btncls.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-               addDataToDatabsse();
+               //calling the method which inserts the data into the database
+               addDataToDatabase();
                if(alarm_value == 1){
                    setAlarm(view);
                }
@@ -265,9 +284,11 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
        });
     }
 
+    //when the user clicks the save button this method will notify with a message "Saved Successfully"
     public void sendOnChannel1(){
         Intent ActivityIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, ActivityIntent, 0);
+        //for better readability the NotificationChannelClass is saved in a separate file
         Notification notification = new NotificationCompat.Builder(this, NotificationChannelClass.CHANNEL_1_ID)
                 .setSmallIcon(R.drawable.poll)
                 .setContentTitle("Remainder")
@@ -285,6 +306,7 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
     public void setAlarm(View v){
         Cursor cursor = databasehelper.viewAllData(nickname);
         if(cursor.getCount() != 0){
+            //adding the alarm for the last created note.
             cursor.moveToLast();
             code = cursor.getInt(0);
         }
@@ -299,6 +321,7 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(System.currentTimeMillis());
         c.clear();
+        //passing te user entered date and time
         c.set(Calendar.DAY_OF_MONTH, day_for_alarm);
         c.set(Calendar.MONTH, month_for_alarm);
         c.set(Calendar.YEAR, year_for_alarm);
@@ -308,8 +331,10 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
         c.set(Calendar.MILLISECOND, 0);
 
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntentAlarm);
+
     }
-    public void addDataToDatabsse(){
+    //Adding the values into the database
+    public void addDataToDatabase(){
         boolean isInserted = databasehelper.insertData(nickname,label, dateView.getText().toString(),
                 timeView.getText().toString(), notesView.getText().toString());
         if(isInserted){
@@ -318,10 +343,9 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
         else{
             //Toast.makeText(getApplicationContext(), "Insertion Failed", Toast.LENGTH_LONG).show();
         }
-
     }
 
-
+    //dialog box will open when user selects "Custom" field in label dropdown list box
     public void openDialog(){
         AlertDialogActivity alertDialog_helper = new AlertDialogActivity();
         alertDialog_helper.show(getSupportFragmentManager(), "Dialog");
@@ -330,6 +354,7 @@ public class AddNotesActivity extends AppCompatActivity implements AlertDialogAc
     @Override
     public void applyTexts(String alert_label) {
             label = alert_label;
+            //adding the received label value into the array
             labelArray.add(4, label);
             Toast.makeText(getApplicationContext(),label, Toast.LENGTH_SHORT).show();
     }
